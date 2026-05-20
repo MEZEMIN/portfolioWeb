@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zemin — Director / Cinematographer / Editor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Inter:wght@300;400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav>
+    <ul>
+      <li><a href="#work" class="nav-link active">WORK</a></li>
+      <li><a href="#about" class="nav-link">ABOUT</a></li>
+      <li><a href="#contact" class="nav-link">CONTACT</a></li>
+    </ul>
+  </nav>
+
+  <header>
+    <h1>Zemin</h1>
+    <p class="subtitle">DIRECTOR <span>/</span> CINEMATOGRAPHER <span>/</span> EDITOR</p>
+  </header>
+
+  <main>
+    <section id="work">
+      <p class="section-label">SELECTED WORK</p>
+      <div class="grid" id="videoGrid"></div>
+    </section>
+
+    <section id="about">
+      <div class="about-inner">
+        <h2>About</h2>
+        <p>Visual storyteller based in Korea. Crafting cinematic narratives through the lens — from short films and documentaries to brand and fashion films. Every frame is a deliberate choice.</p>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="contact-inner">
+        <h2>Contact</h2>
+        <p><a href="mailto:zemin2k@gmail.com">zemin2k@gmail.com</a></p>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="videoModal" aria-hidden="true">
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="modal-content" role="dialog" aria-modal="true">
+      <button class="modal-close" id="modalClose" aria-label="Close">&#x2715;</button>
+      <div class="video-wrapper">
+        <iframe
+          id="videoFrame"
+          frameborder="0"
+          allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
