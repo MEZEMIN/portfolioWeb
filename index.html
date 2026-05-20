@@ -17,8 +17,8 @@
 
   <nav>
     <ul>
-      <li><a href="#work" class="nav-link active">WORK</a></li>
-      <li><a href="#about" class="nav-link">ABOUT</a></li>
+      <li><a href="#work"    class="nav-link active">WORK</a></li>
+      <li><a href="#about"   class="nav-link">ABOUT</a></li>
       <li><a href="#contact" class="nav-link">CONTACT</a></li>
     </ul>
   </nav>
@@ -32,40 +32,43 @@
 
   <main>
     <section id="work">
-      <!-- Featured showcase card -->
-      <div class="showcase">
-        <div class="showcase-card glass-card" id="showcaseCard">
-          <div class="showcase-thumb" id="showcaseThumb">
-            <img id="showcaseImg" src="" alt="" />
-            <button class="play-btn" id="showcasePlayBtn" aria-label="Play video">
-              <div class="play-circle">
-                <div class="play-icon"></div>
+      <!-- Featured + grid side-by-side -->
+      <div class="work-inner">
+
+        <div class="showcase">
+          <div class="showcase-card glass-card" id="showcaseCard">
+            <div class="showcase-thumb" id="showcaseThumb">
+              <img id="showcaseImg" src="" alt="" />
+              <button class="play-btn" id="showcasePlayBtn" aria-label="Play video">
+                <div class="play-circle">
+                  <div class="play-icon"></div>
+                </div>
+              </button>
+            </div>
+            <div class="showcase-info">
+              <p class="showcase-title" id="showcaseTitle"></p>
+              <div class="showcase-meta">
+                <span class="meta-category" id="showcaseCategory"></span>
+                <span class="meta-year"     id="showcaseYear"></span>
               </div>
-            </button>
-          </div>
-          <div class="showcase-info">
-            <p class="showcase-title" id="showcaseTitle"></p>
-            <div class="showcase-meta">
-              <span class="meta-category" id="showcaseCategory"></span>
-              <span class="meta-year" id="showcaseYear"></span>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- 2-row grid of remaining videos -->
-      <div class="video-grid" id="videoGrid"></div>
+        <div class="video-grid" id="videoGrid"></div>
+
+      </div>
     </section>
 
     <section id="about">
-      <div class="about-inner glass-card">
+      <div class="about-inner">
         <h2>About</h2>
         <p>Visual storyteller blending AI, cinematic craft, and design. Creating commercial films, FX sequences, and motion content that lives at the intersection of technology and art.</p>
       </div>
     </section>
 
     <section id="contact">
-      <div class="contact-inner glass-card">
+      <div class="contact-inner">
         <h2>Contact</h2>
         <a href="mailto:zemin2k@gmail.com">zemin2k@gmail.com</a>
       </div>
@@ -79,19 +82,17 @@
       <button class="modal-close" id="modalClose" aria-label="Close">&#x2715;</button>
       <div class="modal-body">
 
-        <!-- Player side -->
         <div class="modal-player-wrap">
           <div class="video-aspect-box">
             <div class="video-inner" id="videoInner"></div>
           </div>
         </div>
 
-        <!-- Description side -->
         <div class="modal-desc glass-card">
           <span class="modal-category" id="modalCategory"></span>
-          <h2 class="modal-title" id="modalTitle"></h2>
-          <span class="modal-year" id="modalYear"></span>
-          <p class="modal-text" id="modalText"></p>
+          <h2 class="modal-title"   id="modalTitle"></h2>
+          <span class="modal-year"  id="modalYear"></span>
+          <p class="modal-text"     id="modalText"></p>
         </div>
 
       </div>
