@@ -3,13 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Zemin — Director / Cinematographer / Editor</title>
+  <title>Jaemin Ryu — AI Commercial Video Creator</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Inter:wght@300;400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
+
+  <div class="bg-blob bg-blob--1" aria-hidden="true"></div>
+  <div class="bg-blob bg-blob--2" aria-hidden="true"></div>
+  <div class="bg-blob bg-blob--3" aria-hidden="true"></div>
 
   <nav>
     <ul>
@@ -20,42 +24,89 @@
   </nav>
 
   <header>
-    <h1>Zemin</h1>
-    <p class="subtitle">DIRECTOR <span>/</span> CINEMATOGRAPHER <span>/</span> EDITOR</p>
+    <h1>Jaemin Ryu</h1>
+    <p class="subtitle">
+      AI Commercial Video Creator <span>/</span> FX Artist <span>/</span> Designer
+    </p>
   </header>
 
   <main>
     <section id="work">
       <p class="section-label">SELECTED WORK</p>
-      <div class="grid" id="videoGrid"></div>
+
+      <!-- Featured showcase card -->
+      <div class="showcase">
+        <div class="showcase-card glass-card" id="showcaseCard">
+          <div class="showcase-thumb" id="showcaseThumb">
+            <img id="showcaseImg" src="" alt="" />
+            <button class="play-btn" id="showcasePlayBtn" aria-label="Play video">
+              <div class="play-circle">
+                <div class="play-icon"></div>
+              </div>
+            </button>
+          </div>
+          <div class="showcase-info">
+            <p class="showcase-title" id="showcaseTitle"></p>
+            <div class="showcase-meta">
+              <span class="meta-category" id="showcaseCategory"></span>
+              <span class="meta-year" id="showcaseYear"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filmstrip -->
+      <div class="filmstrip-wrap">
+        <div class="filmstrip" id="filmstrip"></div>
+      </div>
     </section>
 
     <section id="about">
-      <div class="about-inner">
+      <div class="about-inner glass-card">
         <h2>About</h2>
-        <p>Visual storyteller based in Korea. Crafting cinematic narratives through the lens — from short films and documentaries to brand and fashion films. Every frame is a deliberate choice.</p>
+        <p>Visual storyteller blending AI, cinematic craft, and design. Creating commercial films, FX sequences, and motion content that lives at the intersection of technology and art.</p>
       </div>
     </section>
 
     <section id="contact">
-      <div class="contact-inner">
+      <div class="contact-inner glass-card">
         <h2>Contact</h2>
-        <p><a href="mailto:zemin2k@gmail.com">zemin2k@gmail.com</a></p>
+        <a href="mailto:zemin2k@gmail.com">zemin2k@gmail.com</a>
       </div>
     </section>
   </main>
 
+  <!-- Modal: video left + description right -->
   <div class="modal" id="videoModal" aria-hidden="true">
     <div class="modal-overlay" id="modalOverlay"></div>
-    <div class="modal-content" role="dialog" aria-modal="true">
+    <div class="modal-dialog">
       <button class="modal-close" id="modalClose" aria-label="Close">&#x2715;</button>
-      <div class="video-wrapper">
-        <iframe
-          id="videoFrame"
-          frameborder="0"
-          allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-          allowfullscreen
-        ></iframe>
+      <div class="modal-body">
+
+        <!-- Player side -->
+        <div class="modal-player-wrap">
+          <div class="video-aspect-box">
+            <div class="video-inner" id="videoInner"></div>
+          </div>
+          <!-- YouTube embed-disabled fallback -->
+          <div class="yt-fallback" id="ytFallback">
+            <div class="yt-fallback-icon">!</div>
+            <p>이 영상은 임베드가 제한되어 있습니다.</p>
+            <a id="ytFallbackLink" href="#" target="_blank" rel="noopener noreferrer">
+              YouTube에서 보기 →
+            </a>
+            <p class="yt-hint">YouTube Studio → 영상 세부정보 → 더보기 → 임베드 허용</p>
+          </div>
+        </div>
+
+        <!-- Description side -->
+        <div class="modal-desc glass-card">
+          <span class="modal-category" id="modalCategory"></span>
+          <h2 class="modal-title" id="modalTitle"></h2>
+          <span class="modal-year" id="modalYear"></span>
+          <p class="modal-text" id="modalText"></p>
+        </div>
+
       </div>
     </div>
   </div>
