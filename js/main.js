@@ -50,51 +50,42 @@ const videos = [
   },
 ];
 
-/* ── YOUTUBE IFRAME API ── */
-let ytApiReady = false;
-let pendingYTVideoId = null;
-let ytPlayerInstance = null;
+/* ── BLOB MOUSE TRACKING ── */
+const blobEls = [
+  document.querySelector('.bg-blob--1'),
+  document.querySelector('.bg-blob--2'),
+  document.querySelector('.bg-blob--3'),
+];
 
-(function loadYTApi() {
-  const s = document.createElement('script');
-  s.src = 'https://www.youtube.com/iframe_api';
-  document.head.appendChild(s);
-})();
+// speed = lerp factor, mx/my = movement multiplier relative to cursor offset
+const blobState = [
+  { cx: 0, cy: 0, spd: 0.04, mx:  0.38, my:  0.28 },
+  { cx: 0, cy: 0, spd: 0.03, mx: -0.30, my: -0.24 },
+  { cx: 0, cy: 0, spd: 0.06, mx: -0.22, my:  0.32 },
+];
 
-window.onYouTubeIframeAPIReady = function () {
-  ytApiReady = true;
-  if (pendingYTVideoId) {
-    createYTPlayer(pendingYTVideoId);
-    pendingYTVideoId = null;
-  }
-};
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
 
-function createYTPlayer(videoId) {
-  const inner = document.getElementById('videoInner');
-  inner.innerHTML = '<div id="ytPlayerEl" style="width:100%;height:100%;"></div>';
+window.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+});
 
-  ytPlayerInstance = new YT.Player('ytPlayerEl', {
-    videoId,
-    width: '100%',
-    height: '100%',
-    playerVars: { autoplay: 1, rel: 0, modestbranding: 1 },
-    events: {
-      onReady(e) { e.target.playVideo(); },
-      onError(e) {
-        // 101 / 150 = embedding disabled by video owner
-        showYTFallback(videoId);
-      },
-    },
+(function tickBlobs() {
+  const ox = mouseX - window.innerWidth  / 2;
+  const oy = mouseY - window.innerHeight / 2;
+
+  blobState.forEach((b, i) => {
+    const tx = ox * b.mx;
+    const ty = oy * b.my;
+    b.cx += (tx - b.cx) * b.spd;
+    b.cy += (ty - b.cy) * b.spd;
+    blobEls[i].style.transform = `translate(${b.cx}px, ${b.cy}px)`;
   });
-}
 
-function showYTFallback(videoId) {
-  document.querySelector('.video-aspect-box').style.display = 'none';
-  const fb = document.getElementById('ytFallback');
-  fb.style.display = 'flex';
-  document.getElementById('ytFallbackLink').href =
-    `https://www.youtube.com/watch?v=${videoId}`;
-}
+  requestAnimationFrame(tickBlobs);
+})();
 
 /* ── THUMBNAILS ── */
 function ytThumb(id) {
@@ -114,6 +105,7 @@ async function vimeoThumb(id) {
 
 /* ── STATE ── */
 let currentIndex = 0;
+let loadedThumbs  = [];
 
 /* ── DOM REFS ── */
 const showcaseImg      = document.getElementById('showcaseImg');
@@ -121,68 +113,67 @@ const showcaseTitle    = document.getElementById('showcaseTitle');
 const showcaseCategory = document.getElementById('showcaseCategory');
 const showcaseYear     = document.getElementById('showcaseYear');
 const showcasePlayBtn  = document.getElementById('showcasePlayBtn');
-const filmstrip        = document.getElementById('filmstrip');
+const videoGrid        = document.getElementById('videoGrid');
 
-const modal       = document.getElementById('videoModal');
+const modal        = document.getElementById('videoModal');
 const modalOverlay = document.getElementById('modalOverlay');
-const modalClose  = document.getElementById('modalClose');
+const modalClose   = document.getElementById('modalClose');
 const modalCategory = document.getElementById('modalCategory');
-const modalTitle  = document.getElementById('modalTitle');
-const modalYear   = document.getElementById('modalYear');
-const modalText   = document.getElementById('modalText');
+const modalTitle   = document.getElementById('modalTitle');
+const modalYear    = document.getElementById('modalYear');
+const modalText    = document.getElementById('modalText');
 
 /* ── SHOWCASE UPDATE ── */
-function selectVideo(index, imgSrc) {
-  const prev = filmstrip.querySelector('.film-card.is-active');
-  if (prev) prev.classList.remove('is-active');
-
-  const cards = filmstrip.querySelectorAll('.film-card');
-  if (cards[index]) cards[index].classList.add('is-active');
-
-  const v = videos[index];
-  currentIndex = index;
-
-  // Fade transition
+function updateShowcase(video, thumbSrc) {
   showcaseImg.style.opacity = '0';
   setTimeout(() => {
-    showcaseImg.src = imgSrc || '';
+    showcaseImg.src = thumbSrc || '';
     showcaseImg.style.opacity = '1';
-  }, 150);
-
-  showcaseTitle.textContent    = v.title;
-  showcaseCategory.textContent = v.category;
-  showcaseYear.textContent     = v.year;
+  }, 180);
+  showcaseTitle.textContent    = video.title;
+  showcaseCategory.textContent = video.category;
+  showcaseYear.textContent     = video.year;
 }
 
-/* ── MODAL OPEN / CLOSE ── */
+/* ── GRID REBUILD (all videos except featured) ── */
+function rebuildGrid() {
+  videoGrid.innerHTML = '';
+  videos.forEach((v, i) => {
+    if (i === currentIndex) return;
+    videoGrid.appendChild(createGridCard(v, i, loadedThumbs[i]));
+  });
+}
+
+function selectVideo(index) {
+  currentIndex = index;
+  updateShowcase(videos[index], loadedThumbs[index]);
+  rebuildGrid();
+}
+
+/* ── OPEN VIDEO ── */
+function openVideo(video) {
+  if (video.type === 'youtube') {
+    const win = window.open(`https://www.youtube.com/watch?v=${video.id}`, '_blank', 'noopener,noreferrer');
+    if (win) win.opener = null;
+    return;
+  }
+  openModal(video);
+}
+
+/* ── MODAL ── */
 function openModal(video) {
   modalCategory.textContent = video.category;
   modalTitle.textContent    = video.title;
   modalYear.textContent     = video.year;
   modalText.textContent     = video.description;
 
-  // Reset player area
-  const aspectBox = document.querySelector('.video-aspect-box');
-  aspectBox.style.display = '';
-  document.getElementById('ytFallback').style.display = 'none';
-  document.getElementById('videoInner').innerHTML = '';
-
-  if (video.type === 'vimeo') {
-    document.getElementById('videoInner').innerHTML = `
-      <iframe
-        src="https://player.vimeo.com/video/${video.id}?autoplay=1&title=0&byline=0&portrait=0&color=ffffff"
-        frameborder="0"
-        allow="autoplay; fullscreen; picture-in-picture"
-        allowfullscreen
-        style="position:absolute;inset:0;width:100%;height:100%;"
-      ></iframe>`;
-  } else {
-    if (ytApiReady) {
-      createYTPlayer(video.id);
-    } else {
-      pendingYTVideoId = video.id;
-    }
-  }
+  document.getElementById('videoInner').innerHTML = `
+    <iframe
+      src="https://player.vimeo.com/video/${video.id}?autoplay=1&title=0&byline=0&portrait=0&color=ffffff"
+      frameborder="0"
+      allow="autoplay; fullscreen; picture-in-picture"
+      allowfullscreen
+    ></iframe>`;
 
   modal.classList.add('is-open');
   modal.setAttribute('aria-hidden', 'false');
@@ -190,14 +181,7 @@ function openModal(video) {
 }
 
 function closeModal() {
-  if (ytPlayerInstance) {
-    try { ytPlayerInstance.destroy(); } catch {}
-    ytPlayerInstance = null;
-  }
   document.getElementById('videoInner').innerHTML = '';
-  document.querySelector('.video-aspect-box').style.display = '';
-  document.getElementById('ytFallback').style.display = 'none';
-
   modal.classList.remove('is-open');
   modal.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
@@ -205,17 +189,15 @@ function closeModal() {
 
 modalOverlay.addEventListener('click', closeModal);
 modalClose.addEventListener('click', closeModal);
-showcasePlayBtn.addEventListener('click', () => openModal(videos[currentIndex]));
-
+showcasePlayBtn.addEventListener('click', () => openVideo(videos[currentIndex]));
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
 });
 
-/* ── FILMSTRIP CARD BUILD ── */
-function createFilmCard(video, index, thumbSrc) {
+/* ── GRID CARD ── */
+function createGridCard(video, index, thumbSrc) {
   const card = document.createElement('div');
-  card.className = 'film-card glass-card';
-  if (index === 0) card.classList.add('is-active');
+  card.className = 'grid-card glass-card';
 
   const thumb = document.createElement('div');
   thumb.className = 'card-thumb' + (thumbSrc ? '' : ' is-loading');
@@ -227,10 +209,7 @@ function createFilmCard(video, index, thumbSrc) {
   const playBtn = document.createElement('button');
   playBtn.className = 'play-btn';
   playBtn.setAttribute('aria-label', 'Play');
-  playBtn.innerHTML = `
-    <div class="play-circle">
-      <div class="play-icon"></div>
-    </div>`;
+  playBtn.innerHTML = `<div class="play-circle"><div class="play-icon"></div></div>`;
 
   thumb.appendChild(img);
   thumb.appendChild(playBtn);
@@ -247,71 +226,49 @@ function createFilmCard(video, index, thumbSrc) {
   card.appendChild(thumb);
   card.appendChild(info);
 
-  // Click card body → select showcase
+  // Click card body → make featured
   card.addEventListener('click', (e) => {
     if (e.target.closest('.play-btn')) return;
-    selectVideo(index, img.src);
+    selectVideo(index);
   });
 
-  // Click play → open modal directly
+  // Click play → make featured + open video
   playBtn.addEventListener('click', (e) => {
     e.stopPropagation();
-    selectVideo(index, img.src);
-    openModal(video);
+    selectVideo(index);
+    openVideo(video);
   });
 
-  // Load thumbnail
   if (thumbSrc) {
     img.src = thumbSrc;
-    img.onload = () => thumb.classList.remove('is-loading');
+    img.onload  = () => thumb.classList.remove('is-loading');
+    img.onerror = () => thumb.classList.remove('is-loading');
   }
 
-  return { card, img, thumb };
+  return card;
 }
 
 /* ── INIT ── */
 async function init() {
-  const thumbPromises = videos.map((v) =>
-    v.type === 'youtube'
-      ? Promise.resolve(ytThumb(v.id))
-      : vimeoThumb(v.id)
+  // Load all thumbnails in parallel
+  loadedThumbs = await Promise.all(
+    videos.map((v) =>
+      v.type === 'youtube' ? Promise.resolve(ytThumb(v.id)) : vimeoThumb(v.id)
+    )
   );
 
-  // Build filmstrip immediately with loading state, then fill thumbnails
-  const filmCards = videos.map((v, i) => {
-    const { card, img, thumb } = createFilmCard(v, i, null);
-    filmstrip.appendChild(card);
-    return { img, thumb };
-  });
+  // Set showcase to first video
+  updateShowcase(videos[0], loadedThumbs[0]);
 
-  // Set first showcase
-  showcaseTitle.textContent    = videos[0].title;
-  showcaseCategory.textContent = videos[0].category;
-  showcaseYear.textContent     = videos[0].year;
-  showcaseImg.style.transition = 'opacity 0.3s';
-
-  // Resolve thumbnails and populate
-  const thumbs = await Promise.all(thumbPromises);
-
-  thumbs.forEach((src, i) => {
-    const { img, thumb } = filmCards[i];
-    if (!src) { thumb.classList.remove('is-loading'); return; }
-
-    img.src = src;
-    img.onload = () => thumb.classList.remove('is-loading');
-    img.onerror = () => { thumb.classList.remove('is-loading'); };
-
-    if (i === 0) {
-      showcaseImg.src = src;
-    }
-  });
+  // Build grid for remaining 6
+  rebuildGrid();
 }
 
 /* ── NAV SCROLL HIGHLIGHT ── */
 const navLinks = document.querySelectorAll('.nav-link');
 const sections = document.querySelectorAll('section[id]');
 
-const observer = new IntersectionObserver(
+new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
@@ -322,8 +279,21 @@ const observer = new IntersectionObserver(
     });
   },
   { rootMargin: '-40% 0px -55% 0px' }
-);
+).observe(sections[0]);
 
-sections.forEach((s) => observer.observe(s));
+sections.forEach((s) => {
+  new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          navLinks.forEach((l) => l.classList.remove('active'));
+          const a = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
+          if (a) a.classList.add('active');
+        }
+      });
+    },
+    { rootMargin: '-40% 0px -55% 0px' }
+  ).observe(s);
+});
 
 init();
