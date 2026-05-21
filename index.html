@@ -32,36 +32,34 @@
 
   <main>
     <section id="work">
-      <div class="work-inner">
 
-        <!-- Featured showcase card -->
-        <div class="showcase">
-          <div class="showcase-card glass-card" id="showcaseCard">
-            <div class="showcase-thumb" id="showcaseThumb">
-              <img id="showcaseImg" src="" alt="" />
-              <!-- Title overlay: visible by default -->
-              <div class="card-overlay" id="showcaseOverlay">
-                <p class="ov-title" id="showcaseTitle"></p>
-                <p class="ov-meta"  id="showcaseSub"></p>
-              </div>
-              <!-- Play overlay: visible on hover -->
-              <div class="card-hover">
-                <div class="play-circle"><div class="play-icon"></div></div>
-              </div>
+      <!-- Featured card: always Miserable — Zemistein (007) -->
+      <div class="showcase">
+        <div class="showcase-card glass-card" id="showcaseCard">
+          <div class="showcase-thumb">
+            <img id="showcaseImg" src="" alt="" />
+            <div class="card-overlay">
+              <p class="ov-title" id="showcaseTitle"></p>
+              <p class="ov-meta"  id="showcaseSub"></p>
+            </div>
+            <div class="card-hover">
+              <div class="play-circle"><div class="play-icon"></div></div>
             </div>
           </div>
         </div>
-
-        <!-- 3×2 grid of remaining videos -->
-        <div class="video-grid" id="videoGrid"></div>
-
       </div>
+
+      <!-- Grid: all videos except featured -->
+      <div class="video-grid" id="videoGrid"></div>
+
     </section>
 
     <section id="about">
       <div class="about-inner">
         <h2>About</h2>
-        <p>Visual storyteller blending AI, cinematic craft, and design. Creating commercial films, FX sequences, and motion content that lives at the intersection of technology and art.</p>
+        <p>Hi, I'm Jaemin Ryu — a VFX artist, filmmaker, and designer.</p>
+        <p>I work across visual effects, video production, and design, with a strong focus on translating creative vision into polished, production-ready results. I stay closely attuned to emerging tools and workflows — particularly AI-driven pipelines — and I'm quick to integrate new technology into real projects rather than treating it as an experiment. Adaptability isn't just a buzzword for me; it's how I keep my craft sharp and my output relevant in a fast-moving industry.</p>
+        <p>Whether it's a cinematic VFX shot, a branded video, or a design system, I bring both technical precision and a director's eye to every project.</p>
       </div>
     </section>
 
@@ -73,7 +71,7 @@
     </section>
   </main>
 
-  <!-- Modal: video only, no description -->
+  <!-- Modal: video only -->
   <div class="modal" id="videoModal" aria-hidden="true">
     <div class="modal-overlay" id="modalOverlay"></div>
     <div class="modal-dialog">

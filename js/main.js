@@ -1,55 +1,86 @@
 /* ── VIDEO DATA (from CardInfo.txt) ── */
 const videos = [
   {
-    type: 'youtube', id: 'Y19dV0GHpso',
+    thumb: 'Thumnail/001.png',
     title: 'Spaceship Explosion',
     category: 'HOUDINI FX WORK',
     year: '2025',
-    thumb: 'Thumnail/001.png',
+    type: 'youtube', id: 'Y19dV0GHpso',
   },
   {
-    type: 'vimeo', id: '1166855560',
+    thumb: 'Thumnail/002.png',
     title: 'DOMO London Fog Ads',
     category: 'AI ADVERTISEMENT VIDEO',
     year: '2026',
-    thumb: 'Thumnail/002.png',
+    type: 'vimeo', id: '1166855560',
   },
   {
-    type: 'vimeo', id: '1166855862',
+    thumb: 'Thumnail/003.png',
     title: "DOMO Valentine's Day Ads",
     category: 'AI ADVERTISEMENT VIDEO',
     year: '2026',
-    thumb: 'Thumnail/003.png',
+    type: 'vimeo', id: '1166855862',
   },
   {
-    type: 'vimeo', id: '1166856113',
+    thumb: 'Thumnail/004.png',
     title: 'DOMO Vanilla Matcha Ads',
     category: 'AI ADVERTISEMENT VIDEO',
     year: '2026',
-    thumb: 'Thumnail/004.png',
+    type: 'vimeo', id: '1166856113',
   },
   {
-    type: 'youtube', id: 'xcVSfdI7GzU',
+    thumb: 'Thumnail/005.png',
     title: 'Ice Age',
     category: 'HOUDINI FX WORK',
     year: '2025',
-    thumb: 'Thumnail/005.png',
+    type: 'youtube', id: 'xcVSfdI7GzU',
   },
   {
-    type: 'youtube', id: 'NaMJYXNi6JI',
+    thumb: 'Thumnail/006.png',
     title: 'Thanos Disintegration Effect',
     category: 'HOUDINI FX WORK',
     year: '2025',
-    thumb: 'Thumnail/006.png',
+    type: 'youtube', id: 'NaMJYXNi6JI',
   },
   {
-    type: 'youtube', id: 'lgILl71Ya2E',
+    thumb: 'Thumnail/007.png',
     title: 'Miserable — Zemistein',
     category: 'AI MUSIC VIDEO',
     year: '2026',
-    thumb: 'Thumnail/007.png',
+    type: 'youtube', id: 'lgILl71Ya2E',
+    featured: true,  // always the large showcase card
+  },
+  {
+    thumb: 'Thumnail/008.png',
+    title: 'Campbell River',
+    category: 'A FILM BY JAEMIN RYU',
+    year: '2024',
+    type: 'youtube', id: '5PBApE-Evmc',
+  },
+  {
+    thumb: 'Thumnail/009.png',
+    title: 'Saturna Island',
+    category: 'A FILM BY JAEMIN RYU',
+    year: '2024',
+    type: 'youtube', id: 'r97RPVpzYbg',
+  },
+  {
+    thumb: 'Thumnail/010.png',
+    title: 'East Point, Saturna Island',
+    category: 'A FILM BY JAEMIN RYU',
+    year: '2024',
+    type: 'youtube', id: 'hWSxcE-dMsg',
+  },
+  {
+    thumb: 'Thumnail/011.png',
+    title: 'Saturna Island 2',
+    category: 'A FILM BY JAEMIN RYU',
+    year: '2024',
+    type: 'youtube', id: 'dpNSjN1MrBw',
   },
 ];
+
+const FEATURED = videos.find((v) => v.featured); // always 007
 
 /* ── BLOB MOUSE TRACKING ── */
 const blobEls = [
@@ -58,13 +89,13 @@ const blobEls = [
   document.querySelector('.bg-blob--3'),
 ];
 const blobState = [
-  { cx: 0, cy: 0, spd: 0.04, mx:  0.38, my:  0.28 },
-  { cx: 0, cy: 0, spd: 0.03, mx: -0.30, my: -0.24 },
-  { cx: 0, cy: 0, spd: 0.06, mx: -0.22, my:  0.32 },
+  { cx: 0, cy: 0, spd: 0.035, mx:  0.22, my:  0.18 }, // center blob: subtle movement
+  { cx: 0, cy: 0, spd: 0.030, mx: -0.28, my: -0.22 },
+  { cx: 0, cy: 0, spd: 0.055, mx: -0.20, my:  0.28 },
 ];
+
 let mouseX = window.innerWidth / 2;
 let mouseY = window.innerHeight / 2;
-
 window.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
 
 (function tickBlobs() {
@@ -78,44 +109,16 @@ window.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.cli
   requestAnimationFrame(tickBlobs);
 })();
 
-/* ── STATE ── */
-let currentIndex = 0;
-
 /* ── DOM REFS ── */
 const showcaseCard  = document.getElementById('showcaseCard');
 const showcaseImg   = document.getElementById('showcaseImg');
 const showcaseTitle = document.getElementById('showcaseTitle');
 const showcaseSub   = document.getElementById('showcaseSub');
 const videoGrid     = document.getElementById('videoGrid');
-
-const modal        = document.getElementById('videoModal');
-const modalOverlay = document.getElementById('modalOverlay');
-const modalClose   = document.getElementById('modalClose');
-const videoInner   = document.getElementById('videoInner');
-
-/* ── SHOWCASE UPDATE ── */
-function updateShowcase(index) {
-  const v = videos[index];
-  currentIndex = index;
-
-  showcaseImg.style.opacity = '0';
-  setTimeout(() => {
-    showcaseImg.src = v.thumb;
-    showcaseImg.style.opacity = '1';
-  }, 160);
-
-  showcaseTitle.textContent = v.title;
-  showcaseSub.textContent   = `${v.category} · ${v.year}`;
-}
-
-/* ── GRID REBUILD ── */
-function rebuildGrid() {
-  videoGrid.innerHTML = '';
-  videos.forEach((v, i) => {
-    if (i === currentIndex) return;
-    videoGrid.appendChild(createGridCard(v, i));
-  });
-}
+const modal         = document.getElementById('videoModal');
+const modalOverlay  = document.getElementById('modalOverlay');
+const modalClose    = document.getElementById('modalClose');
+const videoInner    = document.getElementById('videoInner');
 
 /* ── OPEN VIDEO ── */
 function openVideo(video) {
@@ -130,7 +133,7 @@ function openVideo(video) {
   openModal(video);
 }
 
-/* ── MODAL ── */
+/* ── VIMEO MODAL ── */
 function openModal(video) {
   videoInner.innerHTML = `
     <iframe
@@ -157,11 +160,16 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
 });
 
-/* Clicking the showcase card plays the video */
-showcaseCard.addEventListener('click', () => openVideo(videos[currentIndex]));
+/* ── SHOWCASE: always shows the featured video (007) ── */
+function initShowcase() {
+  showcaseImg.src           = FEATURED.thumb;
+  showcaseTitle.textContent = FEATURED.title;
+  showcaseSub.textContent   = `${FEATURED.category} · ${FEATURED.year}`;
+  showcaseCard.addEventListener('click', () => openVideo(FEATURED));
+}
 
 /* ── GRID CARD ── */
-function createGridCard(video, index) {
+function createGridCard(video) {
   const card = document.createElement('div');
   card.className = 'grid-card glass-card';
 
@@ -172,14 +180,12 @@ function createGridCard(video, index) {
   img.alt = video.title;
   img.src = video.thumb;
 
-  /* Title overlay (default visible) */
   const overlay = document.createElement('div');
   overlay.className = 'card-overlay';
   overlay.innerHTML = `
     <p class="ov-title">${video.title}</p>
     <p class="ov-meta">${video.category} · ${video.year}</p>`;
 
-  /* Play overlay (hover visible) */
   const hoverEl = document.createElement('div');
   hoverEl.className = 'card-hover';
   hoverEl.innerHTML = `<div class="play-circle"><div class="play-icon"></div></div>`;
@@ -189,37 +195,32 @@ function createGridCard(video, index) {
   thumb.appendChild(hoverEl);
   card.appendChild(thumb);
 
-  /* Click → select as featured + play */
-  card.addEventListener('click', () => {
-    updateShowcase(index);
-    rebuildGrid();
-    openVideo(video);
-  });
-
+  card.addEventListener('click', () => openVideo(video));
   return card;
 }
 
-/* ── INIT ── */
-function init() {
-  updateShowcase(0);
-  rebuildGrid();
+/* ── BUILD GRID (all non-featured videos) ── */
+function buildGrid() {
+  videos
+    .filter((v) => !v.featured)
+    .forEach((v) => videoGrid.appendChild(createGridCard(v)));
 }
 
 /* ── NAV SCROLL HIGHLIGHT ── */
-const navLinks = document.querySelectorAll('.nav-link');
 document.querySelectorAll('section[id]').forEach((s) => {
   new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          navLinks.forEach((l) => l.classList.remove('active'));
-          const a = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
-          if (a) a.classList.add('active');
-        }
+        if (!entry.isIntersecting) return;
+        document.querySelectorAll('.nav-link').forEach((l) => l.classList.remove('active'));
+        const a = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
+        if (a) a.classList.add('active');
       });
     },
     { rootMargin: '-40% 0px -55% 0px' }
   ).observe(s);
 });
 
-init();
+/* ── INIT ── */
+initShowcase();
+buildGrid();
