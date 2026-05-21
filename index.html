@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
+  <!-- Apply dark mode before paint to prevent flash -->
+  <script>if(localStorage.getItem('dark-mode')!=='false')document.documentElement.classList.add('dark-mode')</script>
 </head>
 <body>
 
@@ -80,6 +82,23 @@
         <div class="video-inner" id="videoInner"></div>
       </div>
     </div>
+  </div>
+
+  <!-- Fixed name badge: appears top-right on scroll -->
+  <div class="name-badge" id="nameBadge">Jaemin Ryu</div>
+
+  <!-- Quick menu: dark mode toggle + back to top -->
+  <div class="quick-menu">
+    <button class="qm-btn" id="darkToggle" aria-label="Toggle dark mode" aria-pressed="false">
+      <span class="icon-theme" aria-hidden="true"></span>
+    </button>
+    <button class="qm-btn" id="toTopBtn" aria-label="Back to top">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
+           stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="1,8.5 6,3.5 11,8.5"/>
+      </svg>
+    </button>
   </div>
 
   <script src="js/main.js"></script>

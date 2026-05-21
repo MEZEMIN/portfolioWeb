@@ -221,6 +221,82 @@ document.querySelectorAll('section[id]').forEach((s) => {
   ).observe(s);
 });
 
+/* ── SCROLL: nav alignment + Jaemin Ryu FLIP animation ── */
+const navEl      = document.querySelector('nav');
+const nameBadge  = document.getElementById('nameBadge');
+const headerH1   = document.querySelector('header h1');
+const NAV_H      = 70; // matches CSS nav height
+const SCROLL_THRESHOLD = 90;
+let isScrolledPast  = false;
+let badgeOutTimeout = null;
+
+window.addEventListener('scroll', () => {
+  const past = window.scrollY > SCROLL_THRESHOLD;
+  navEl.classList.toggle('scrolled', past);
+  if (past === isScrolledPast) return;
+  isScrolledPast = past;
+  past ? flyBadgeIn() : flyBadgeOut();
+}, { passive: true });
+
+function flyBadgeIn() {
+  clearTimeout(badgeOutTimeout);
+  const h1Rect = headerH1.getBoundingClientRect();
+
+  // Badge natural center (top-right, vertically centred in nav)
+  const badgeCenterX = window.innerWidth - 52 - nameBadge.offsetWidth / 2;
+  const badgeCenterY = NAV_H / 2;
+
+  const dx    = (h1Rect.left + h1Rect.width  / 2) - badgeCenterX;
+  const dy    = (h1Rect.top  + h1Rect.height / 2) - badgeCenterY;
+  const scale = h1Rect.height / (nameBadge.offsetHeight || 1);
+
+  // Hide the header h1 instantly (keeps layout space)
+  headerH1.style.transition = 'none';
+  headerH1.style.opacity    = '0';
+
+  // Teleport badge to h1's visual position
+  nameBadge.style.transition = 'none';
+  nameBadge.style.opacity    = '1';
+  nameBadge.style.transform  = `translate(${dx}px,${dy}px) scale(${scale})`;
+  nameBadge.classList.add('visible');
+
+  // Force reflow, then fly to natural position
+  nameBadge.offsetHeight; // eslint-disable-line no-unused-expressions
+  nameBadge.style.transition = 'transform 0.65s cubic-bezier(0.4,0,0.2,1)';
+  nameBadge.style.transform  = 'none';
+}
+
+function flyBadgeOut() {
+  nameBadge.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+  nameBadge.style.opacity    = '0';
+  nameBadge.style.transform  = 'translateX(14px)';
+
+  badgeOutTimeout = setTimeout(() => {
+    nameBadge.classList.remove('visible');
+    nameBadge.removeAttribute('style');
+    headerH1.style.transition = 'opacity 0.35s ease';
+    headerH1.style.opacity    = '1';
+    setTimeout(() => { headerH1.style.transition = ''; headerH1.style.opacity = ''; }, 400);
+  }, 260);
+}
+
+/* ── DARK MODE (default on; light mode is the toggle) ── */
+let isDark = localStorage.getItem('dark-mode') !== 'false';
+// Class already applied by inline <head> script; keep state in sync
+document.documentElement.classList.toggle('dark-mode', isDark);
+
+document.getElementById('darkToggle').addEventListener('click', () => {
+  isDark = !isDark;
+  document.documentElement.classList.toggle('dark-mode', isDark);
+  document.getElementById('darkToggle').setAttribute('aria-pressed', String(isDark));
+  localStorage.setItem('dark-mode', String(isDark));
+});
+
+/* ── SCROLL TO TOP ── */
+document.getElementById('toTopBtn').addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
 /* ── INIT ── */
 initShowcase();
 buildGrid();
