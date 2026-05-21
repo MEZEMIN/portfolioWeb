@@ -32,29 +32,27 @@
 
   <main>
     <section id="work">
-      <!-- Featured + grid side-by-side -->
       <div class="work-inner">
 
+        <!-- Featured showcase card -->
         <div class="showcase">
           <div class="showcase-card glass-card" id="showcaseCard">
             <div class="showcase-thumb" id="showcaseThumb">
               <img id="showcaseImg" src="" alt="" />
-              <button class="play-btn" id="showcasePlayBtn" aria-label="Play video">
-                <div class="play-circle">
-                  <div class="play-icon"></div>
-                </div>
-              </button>
-            </div>
-            <div class="showcase-info">
-              <p class="showcase-title" id="showcaseTitle"></p>
-              <div class="showcase-meta">
-                <span class="meta-category" id="showcaseCategory"></span>
-                <span class="meta-year"     id="showcaseYear"></span>
+              <!-- Title overlay: visible by default -->
+              <div class="card-overlay" id="showcaseOverlay">
+                <p class="ov-title" id="showcaseTitle"></p>
+                <p class="ov-meta"  id="showcaseSub"></p>
+              </div>
+              <!-- Play overlay: visible on hover -->
+              <div class="card-hover">
+                <div class="play-circle"><div class="play-icon"></div></div>
               </div>
             </div>
           </div>
         </div>
 
+        <!-- 3×2 grid of remaining videos -->
         <div class="video-grid" id="videoGrid"></div>
 
       </div>
@@ -75,26 +73,13 @@
     </section>
   </main>
 
-  <!-- Modal: video left + description right -->
+  <!-- Modal: video only, no description -->
   <div class="modal" id="videoModal" aria-hidden="true">
     <div class="modal-overlay" id="modalOverlay"></div>
     <div class="modal-dialog">
       <button class="modal-close" id="modalClose" aria-label="Close">&#x2715;</button>
-      <div class="modal-body">
-
-        <div class="modal-player-wrap">
-          <div class="video-aspect-box">
-            <div class="video-inner" id="videoInner"></div>
-          </div>
-        </div>
-
-        <div class="modal-desc glass-card">
-          <span class="modal-category" id="modalCategory"></span>
-          <h2 class="modal-title"   id="modalTitle"></h2>
-          <span class="modal-year"  id="modalYear"></span>
-          <p class="modal-text"     id="modalText"></p>
-        </div>
-
+      <div class="video-aspect-box">
+        <div class="video-inner" id="videoInner"></div>
       </div>
     </div>
   </div>

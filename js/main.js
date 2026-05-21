@@ -1,52 +1,53 @@
+/* ── VIDEO DATA (from CardInfo.txt) ── */
 const videos = [
   {
+    type: 'youtube', id: 'Y19dV0GHpso',
+    title: 'Spaceship Explosion',
+    category: 'HOUDINI FX WORK',
+    year: '2025',
+    thumb: 'Thumnail/001.png',
+  },
+  {
     type: 'vimeo', id: '1166855560',
-    title: 'Between Tides',
-    category: 'SHORT FILM',
-    year: '2024',
-    description: 'A cinematic exploration of memory and solitude, filmed across three tidal cycles at the edge of land and sea.',
+    title: 'DOMO London Fog Ads',
+    category: 'AI ADVERTISEMENT VIDEO',
+    year: '2026',
+    thumb: 'Thumnail/002.png',
   },
   {
     type: 'vimeo', id: '1166855862',
-    title: 'Reverence',
-    category: 'BRAND FILM',
-    year: '2024',
-    description: 'Commissioned visual narrative weaving product aesthetics with natural forms and quiet ceremony.',
+    title: "DOMO Valentine's Day Ads",
+    category: 'AI ADVERTISEMENT VIDEO',
+    year: '2026',
+    thumb: 'Thumnail/003.png',
   },
   {
     type: 'vimeo', id: '1166856113',
-    title: 'The Shape of Silence',
-    category: 'DOCUMENTARY',
-    year: '2024',
-    description: 'Documentary portrait of stillness — observing the quiet, unhurried rhythms of daily life.',
+    title: 'DOMO Vanilla Matcha Ads',
+    category: 'AI ADVERTISEMENT VIDEO',
+    year: '2026',
+    thumb: 'Thumnail/004.png',
   },
   {
     type: 'youtube', id: 'xcVSfdI7GzU',
-    title: 'Luminous Days',
-    category: 'SHORT FILM',
-    year: '2023',
-    description: 'A short film about light, time, and the spaces between moments we choose to remember.',
+    title: 'Ice Age',
+    category: 'HOUDINI FX WORK',
+    year: '2025',
+    thumb: 'Thumnail/005.png',
   },
   {
     type: 'youtube', id: 'NaMJYXNi6JI',
-    title: 'City Interval',
-    category: 'EXPERIMENTAL',
-    year: '2023',
-    description: 'Urban textures and human movement collapsed into a rhythmic visual essay on density and drift.',
-  },
-  {
-    type: 'youtube', id: 'Y19dV0GHpso',
-    title: 'Kinetic Study',
-    category: 'DANCE FILM',
-    year: '2022',
-    description: 'Choreography and camera language in dialogue — motion as meaning, stillness as punctuation.',
+    title: 'Thanos Disintegration Effect',
+    category: 'HOUDINI FX WORK',
+    year: '2025',
+    thumb: 'Thumnail/006.png',
   },
   {
     type: 'youtube', id: 'lgILl71Ya2E',
-    title: 'Ephemeral',
-    category: 'FASHION FILM',
-    year: '2022',
-    description: 'Fashion as philosophy. A meditation on form, fabric, and the temporary nature of beauty.',
+    title: 'Miserable — Zemistein',
+    category: 'AI MUSIC VIDEO',
+    year: '2026',
+    thumb: 'Thumnail/007.png',
   },
 ];
 
@@ -56,104 +57,73 @@ const blobEls = [
   document.querySelector('.bg-blob--2'),
   document.querySelector('.bg-blob--3'),
 ];
-
-// speed = lerp factor, mx/my = movement multiplier relative to cursor offset
 const blobState = [
   { cx: 0, cy: 0, spd: 0.04, mx:  0.38, my:  0.28 },
   { cx: 0, cy: 0, spd: 0.03, mx: -0.30, my: -0.24 },
   { cx: 0, cy: 0, spd: 0.06, mx: -0.22, my:  0.32 },
 ];
-
 let mouseX = window.innerWidth / 2;
 let mouseY = window.innerHeight / 2;
 
-window.addEventListener('mousemove', (e) => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-});
+window.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
 
 (function tickBlobs() {
   const ox = mouseX - window.innerWidth  / 2;
   const oy = mouseY - window.innerHeight / 2;
-
   blobState.forEach((b, i) => {
-    const tx = ox * b.mx;
-    const ty = oy * b.my;
-    b.cx += (tx - b.cx) * b.spd;
-    b.cy += (ty - b.cy) * b.spd;
+    b.cx += (ox * b.mx - b.cx) * b.spd;
+    b.cy += (oy * b.my - b.cy) * b.spd;
     blobEls[i].style.transform = `translate(${b.cx}px, ${b.cy}px)`;
   });
-
   requestAnimationFrame(tickBlobs);
 })();
 
-/* ── THUMBNAILS ── */
-function ytThumb(id) {
-  return `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
-}
-
-async function vimeoThumb(id) {
-  try {
-    const r = await fetch(
-      `https://vimeo.com/api/oembed.json?url=https://vimeo.com/${id}&width=800`
-    );
-    if (!r.ok) return null;
-    const d = await r.json();
-    return d.thumbnail_url || null;
-  } catch { return null; }
-}
-
 /* ── STATE ── */
 let currentIndex = 0;
-let loadedThumbs  = [];
 
 /* ── DOM REFS ── */
-const showcaseImg      = document.getElementById('showcaseImg');
-const showcaseTitle    = document.getElementById('showcaseTitle');
-const showcaseCategory = document.getElementById('showcaseCategory');
-const showcaseYear     = document.getElementById('showcaseYear');
-const showcasePlayBtn  = document.getElementById('showcasePlayBtn');
-const videoGrid        = document.getElementById('videoGrid');
+const showcaseCard  = document.getElementById('showcaseCard');
+const showcaseImg   = document.getElementById('showcaseImg');
+const showcaseTitle = document.getElementById('showcaseTitle');
+const showcaseSub   = document.getElementById('showcaseSub');
+const videoGrid     = document.getElementById('videoGrid');
 
 const modal        = document.getElementById('videoModal');
 const modalOverlay = document.getElementById('modalOverlay');
 const modalClose   = document.getElementById('modalClose');
-const modalCategory = document.getElementById('modalCategory');
-const modalTitle   = document.getElementById('modalTitle');
-const modalYear    = document.getElementById('modalYear');
-const modalText    = document.getElementById('modalText');
+const videoInner   = document.getElementById('videoInner');
 
 /* ── SHOWCASE UPDATE ── */
-function updateShowcase(video, thumbSrc) {
+function updateShowcase(index) {
+  const v = videos[index];
+  currentIndex = index;
+
   showcaseImg.style.opacity = '0';
   setTimeout(() => {
-    showcaseImg.src = thumbSrc || '';
+    showcaseImg.src = v.thumb;
     showcaseImg.style.opacity = '1';
-  }, 180);
-  showcaseTitle.textContent    = video.title;
-  showcaseCategory.textContent = video.category;
-  showcaseYear.textContent     = video.year;
+  }, 160);
+
+  showcaseTitle.textContent = v.title;
+  showcaseSub.textContent   = `${v.category} · ${v.year}`;
 }
 
-/* ── GRID REBUILD (all videos except featured) ── */
+/* ── GRID REBUILD ── */
 function rebuildGrid() {
   videoGrid.innerHTML = '';
   videos.forEach((v, i) => {
     if (i === currentIndex) return;
-    videoGrid.appendChild(createGridCard(v, i, loadedThumbs[i]));
+    videoGrid.appendChild(createGridCard(v, i));
   });
-}
-
-function selectVideo(index) {
-  currentIndex = index;
-  updateShowcase(videos[index], loadedThumbs[index]);
-  rebuildGrid();
 }
 
 /* ── OPEN VIDEO ── */
 function openVideo(video) {
   if (video.type === 'youtube') {
-    const win = window.open(`https://www.youtube.com/watch?v=${video.id}`, '_blank', 'noopener,noreferrer');
+    const win = window.open(
+      `https://www.youtube.com/watch?v=${video.id}`,
+      '_blank', 'noopener,noreferrer'
+    );
     if (win) win.opener = null;
     return;
   }
@@ -162,26 +132,20 @@ function openVideo(video) {
 
 /* ── MODAL ── */
 function openModal(video) {
-  modalCategory.textContent = video.category;
-  modalTitle.textContent    = video.title;
-  modalYear.textContent     = video.year;
-  modalText.textContent     = video.description;
-
-  document.getElementById('videoInner').innerHTML = `
+  videoInner.innerHTML = `
     <iframe
       src="https://player.vimeo.com/video/${video.id}?autoplay=1&title=0&byline=0&portrait=0&color=ffffff"
       frameborder="0"
       allow="autoplay; fullscreen; picture-in-picture"
       allowfullscreen
     ></iframe>`;
-
   modal.classList.add('is-open');
   modal.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
 }
 
 function closeModal() {
-  document.getElementById('videoInner').innerHTML = '';
+  videoInner.innerHTML = '';
   modal.classList.remove('is-open');
   modal.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
@@ -189,99 +153,61 @@ function closeModal() {
 
 modalOverlay.addEventListener('click', closeModal);
 modalClose.addEventListener('click', closeModal);
-showcasePlayBtn.addEventListener('click', () => openVideo(videos[currentIndex]));
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
 });
 
+/* Clicking the showcase card plays the video */
+showcaseCard.addEventListener('click', () => openVideo(videos[currentIndex]));
+
 /* ── GRID CARD ── */
-function createGridCard(video, index, thumbSrc) {
+function createGridCard(video, index) {
   const card = document.createElement('div');
   card.className = 'grid-card glass-card';
 
   const thumb = document.createElement('div');
-  thumb.className = 'card-thumb' + (thumbSrc ? '' : ' is-loading');
+  thumb.className = 'card-thumb';
 
   const img = document.createElement('img');
   img.alt = video.title;
-  img.style.transition = 'opacity 0.3s';
+  img.src = video.thumb;
 
-  const playBtn = document.createElement('button');
-  playBtn.className = 'play-btn';
-  playBtn.setAttribute('aria-label', 'Play');
-  playBtn.innerHTML = `<div class="play-circle"><div class="play-icon"></div></div>`;
+  /* Title overlay (default visible) */
+  const overlay = document.createElement('div');
+  overlay.className = 'card-overlay';
+  overlay.innerHTML = `
+    <p class="ov-title">${video.title}</p>
+    <p class="ov-meta">${video.category} · ${video.year}</p>`;
+
+  /* Play overlay (hover visible) */
+  const hoverEl = document.createElement('div');
+  hoverEl.className = 'card-hover';
+  hoverEl.innerHTML = `<div class="play-circle"><div class="play-icon"></div></div>`;
 
   thumb.appendChild(img);
-  thumb.appendChild(playBtn);
-
-  const info = document.createElement('div');
-  info.className = 'card-info';
-  info.innerHTML = `
-    <p class="card-title-sm">${video.title}</p>
-    <div class="card-meta">
-      <span class="cat">${video.category}</span>
-      <span class="yr">${video.year}</span>
-    </div>`;
-
+  thumb.appendChild(overlay);
+  thumb.appendChild(hoverEl);
   card.appendChild(thumb);
-  card.appendChild(info);
 
-  // Click card body → make featured
-  card.addEventListener('click', (e) => {
-    if (e.target.closest('.play-btn')) return;
-    selectVideo(index);
-  });
-
-  // Click play → make featured + open video
-  playBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    selectVideo(index);
+  /* Click → select as featured + play */
+  card.addEventListener('click', () => {
+    updateShowcase(index);
+    rebuildGrid();
     openVideo(video);
   });
-
-  if (thumbSrc) {
-    img.src = thumbSrc;
-    img.onload  = () => thumb.classList.remove('is-loading');
-    img.onerror = () => thumb.classList.remove('is-loading');
-  }
 
   return card;
 }
 
 /* ── INIT ── */
-async function init() {
-  // Load all thumbnails in parallel
-  loadedThumbs = await Promise.all(
-    videos.map((v) =>
-      v.type === 'youtube' ? Promise.resolve(ytThumb(v.id)) : vimeoThumb(v.id)
-    )
-  );
-
-  // Set showcase to first video
-  updateShowcase(videos[0], loadedThumbs[0]);
-
-  // Build grid for remaining 6
+function init() {
+  updateShowcase(0);
   rebuildGrid();
 }
 
 /* ── NAV SCROLL HIGHLIGHT ── */
 const navLinks = document.querySelectorAll('.nav-link');
-const sections = document.querySelectorAll('section[id]');
-
-new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        navLinks.forEach((l) => l.classList.remove('active'));
-        const a = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
-        if (a) a.classList.add('active');
-      }
-    });
-  },
-  { rootMargin: '-40% 0px -55% 0px' }
-).observe(sections[0]);
-
-sections.forEach((s) => {
+document.querySelectorAll('section[id]').forEach((s) => {
   new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
