@@ -78,8 +78,15 @@
     <div class="modal-overlay" id="modalOverlay"></div>
     <div class="modal-dialog">
       <button class="modal-close" id="modalClose" aria-label="Close">&#x2715;</button>
-      <div class="video-aspect-box">
-        <div class="video-inner" id="videoInner"></div>
+      <div class="modal-content">
+        <div class="video-aspect-box">
+          <div class="video-inner" id="videoInner"></div>
+        </div>
+        <aside class="video-info-panel" aria-label="Video description">
+          <h3 id="modalTitle"></h3>
+          <p id="modalDescription"></p>
+          <div class="modal-tools" id="modalTools" aria-label="Tools used"></div>
+        </aside>
       </div>
     </div>
   </div>

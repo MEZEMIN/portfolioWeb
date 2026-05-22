@@ -1,11 +1,37 @@
 001.png, Spaceship Explosion (2025), Houdini FX Work, https://www.youtube.com/watch?v=Y19dV0GHpso, 사용된 툴: Houdini/Nuke/FC
+- Created Pyro, RBD (Destruction), and POP (Particle) simulations using Houdini. Lighting was done with SideFX's Karma, and compositing was handled in Nuke X.
+
 002.png, DOMO London Fog Ads (2026), AI Advertisment Video, https://vimeo.com/1166855560?fl=pl&fe=vl, 사용된 툴:  Higgs/FC
+- Planned and produced a short social media advertisement for DOMO Tea's London Fog Earl Grey, with the ad video created using AI.
+
 003.png, DOMO Valentine's Day Ads (2026), AI Advertisment Video, https://vimeo.com/1166855862?fl=pl&fe=vl, 사용된 툴:  Higgs/FC
+
 004.png, DOMO Vanilla Matcha Ads (2026), AI Advertisment Video, https://vimeo.com/1166856113?fl=pl&fe=vl, 사용된 툴:  Higgs/FC
+- Planned and produced a short social media advertisement for DOMO Tea's London Vanilla Matcha, with the ad video created using AI.
+
 005.png, Ice Age (2025), Houdini FX Work, https://www.youtube.com/watch?v=xcVSfdI7GzU, 사용된 툴:  Houdini
+- Responsible for the design, modeling, and simulation of the energy shield in the short film Ice Age (2025).
+
 006.png, Thanos Disintegration Effect (2025), Houdini FX Work, https://www.youtube.com/watch?v=NaMJYXNi6JI, 사용된 툴:  Houdini/Nuke/FC
+- For this project, I handled all aspects of production, utilizing pre-existing assets for the 3D model and animation. My primary focus was on the simulation and compositing work.
+
+Here’s a brief breakdown of the process: 
+The zombie's dissolving effect was created using a combination of Houdini's Pyro source spread and Vellum simulations. 
+Building on the Vellum simulation, I layered additional Smoke, POPs (particles), and Spark effects to add richness and depth. 
+To create a realistic "burning away" look, I linked the character material's displacement values directly with the Vellum simulation data. 
+Finally, all visual elements were composited and enhanced in NukeX to achieve the final look.
+
 007.png, Miserable - Zemistein (2026), AI Music Video, https://www.youtube.com/watch?v=lgILl71Ya2E, 사용된 툴:  Higgs/FC
+- Created a fictional character named Zemistein and produced a music video using AI.
+
 008.png, Campbell River (2024), a film by Jaemin Ryu, https://www.youtube.com/watch?v=5PBApE-Evmc, 사용된 툴:  FC
+-Planned, filmed, and edited the video.
+
 009.png, Saturna Island (2024), a film by Jaemin Ryu, https://www.youtube.com/watch?v=r97RPVpzYbg, 사용된 툴:  FC
+-Planned, filmed, and edited the video.
+
 010.png, East Point, Saturna Island (2024), a film by Jaemin Ryu, https://www.youtube.com/watch?v=hWSxcE-dMsg, 사용된 툴:  FC
+-Planned, filmed, and edited the video.
+
 011.png, Saturna Island 2 (2024), a film by Jaemin Ryu, https://www.youtube.com/watch?v=dpNSjN1MrBw&t=2s, 사용된 툴:  FC
+-Planned, filmed, and edited the video.

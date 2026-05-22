@@ -7,6 +7,7 @@ const videos = [
     year: '2025',
     type: 'youtube', id: 'Y19dV0GHpso',
     tools: ['Houdini', 'Nuke', 'FC'],
+    description: "Created Pyro, RBD (Destruction), and POP (Particle) simulations using Houdini. Lighting was done with SideFX's Karma, and compositing was handled in Nuke X.",
   },
   {
     thumb: 'Thumnail/002.png',
@@ -16,6 +17,7 @@ const videos = [
     type: 'vimeo', id: '1166855560',
     aspect: 'portrait',
     tools: ['Higgs', 'FC'],
+    description: "Planned and produced a short social media advertisement for DOMO Tea's London Fog Earl Grey, with the ad video created using AI.",
   },
   {
     thumb: 'Thumnail/003.png',
@@ -25,6 +27,7 @@ const videos = [
     type: 'vimeo', id: '1166855862',
     aspect: 'portrait',
     tools: ['Higgs', 'FC'],
+    description: "Planned and produced a short social media advertisement for DOMO Tea's Valentine's Day campaign, with the ad video created using AI.",
   },
   {
     thumb: 'Thumnail/004.png',
@@ -32,8 +35,8 @@ const videos = [
     category: 'AI ADVERTISEMENT VIDEO',
     year: '2026',
     type: 'vimeo', id: '1166856113',
-    aspect: 'portrait',
     tools: ['Higgs', 'FC'],
+    description: "Planned and produced a short social media advertisement for DOMO Tea's London Vanilla Matcha, with the ad video created using AI.",
   },
   {
     thumb: 'Thumnail/005.png',
@@ -42,6 +45,7 @@ const videos = [
     year: '2025',
     type: 'youtube', id: 'xcVSfdI7GzU',
     tools: ['Houdini'],
+    description: 'Responsible for the design, modeling, and simulation of the energy shield in the short film Ice Age (2025).',
   },
   {
     thumb: 'Thumnail/006.png',
@@ -50,6 +54,13 @@ const videos = [
     year: '2025',
     type: 'youtube', id: 'NaMJYXNi6JI',
     tools: ['Houdini', 'Nuke', 'FC'],
+    description: `For this project, I handled all aspects of production, utilizing pre-existing assets for the 3D model and animation. My primary focus was on the simulation and compositing work.
+
+Here's a brief breakdown of the process:
+The zombie's dissolving effect was created using a combination of Houdini's Pyro source spread and Vellum simulations.
+Building on the Vellum simulation, I layered additional Smoke, POPs (particles), and Spark effects to add richness and depth.
+To create a realistic "burning away" look, I linked the character material's displacement values directly with the Vellum simulation data.
+Finally, all visual elements were composited and enhanced in NukeX to achieve the final look.`,
   },
   {
     thumb: 'Thumnail/007.png',
@@ -59,6 +70,7 @@ const videos = [
     type: 'youtube', id: 'lgILl71Ya2E',
     featured: true,
     tools: ['Higgs', 'FC'],
+    description: 'Created a fictional character named Zemistein and produced a music video using AI.',
   },
   {
     thumb: 'Thumnail/008.png',
@@ -67,6 +79,7 @@ const videos = [
     year: '2024',
     type: 'youtube', id: '5PBApE-Evmc',
     tools: ['FC'],
+    description: 'Planned, filmed, and edited the video.',
   },
   {
     thumb: 'Thumnail/009.png',
@@ -75,6 +88,7 @@ const videos = [
     year: '2024',
     type: 'youtube', id: 'r97RPVpzYbg',
     tools: ['FC'],
+    description: 'Planned, filmed, and edited the video.',
   },
   {
     thumb: 'Thumnail/010.png',
@@ -83,6 +97,7 @@ const videos = [
     year: '2024',
     type: 'youtube', id: 'hWSxcE-dMsg',
     tools: ['FC'],
+    description: 'Planned, filmed, and edited the video.',
   },
   {
     thumb: 'Thumnail/011.png',
@@ -92,6 +107,7 @@ const videos = [
     type: 'youtube', id: 'dpNSjN1MrBw',
     start: 2,
     tools: ['FC'],
+    description: 'Planned, filmed, and edited the video.',
   },
 ];
 
@@ -134,6 +150,9 @@ const modal         = document.getElementById('videoModal');
 const modalOverlay  = document.getElementById('modalOverlay');
 const modalClose    = document.getElementById('modalClose');
 const modalDialog   = modal.querySelector('.modal-dialog');
+const modalTitle    = document.getElementById('modalTitle');
+const modalDesc     = document.getElementById('modalDescription');
+const modalTools    = document.getElementById('modalTools');
 const videoInner    = document.getElementById('videoInner');
 
 /* ── OPEN VIDEO ── */
@@ -155,22 +174,27 @@ function openModal(video) {
     : `https://player.vimeo.com/video/${video.id}?autoplay=1&title=0&byline=0&portrait=0&color=ffffff`;
 
   modalDialog.classList.toggle('is-portrait', video.aspect === 'portrait');
-  videoInner.innerHTML = `
-    <iframe
-      src="${src}"
-      title="${video.title}"
-      frameborder="0"
-      allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-      referrerpolicy="strict-origin-when-cross-origin"
-      allowfullscreen
-    ></iframe>`;
+  modalTitle.textContent = `${video.title} (${video.year})`;
+  modalDesc.textContent = video.description || 'Video description coming soon.';
+  modalTools.replaceChildren(buildToolLogos(video.tools || [], 'modal-tool-logos'));
+
+  const iframe = document.createElement('iframe');
+  iframe.src = src;
+  iframe.title = video.title;
+  iframe.frameBorder = '0';
+  iframe.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media';
+  iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+  iframe.allowFullscreen = true;
+  videoInner.replaceChildren(iframe);
+
   modal.classList.add('is-open');
   modal.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
 }
 
 function closeModal() {
-  videoInner.innerHTML = '';
+  videoInner.replaceChildren();
+  modalTools.replaceChildren();
   modalDialog.classList.remove('is-portrait');
   modal.classList.remove('is-open');
   modal.setAttribute('aria-hidden', 'true');
@@ -184,9 +208,9 @@ document.addEventListener('keydown', (e) => {
 });
 
 /* ── TOOL LOGOS: build a row of logo imgs ── */
-function buildToolLogos(tools) {
+function buildToolLogos(tools, className = 'card-tools') {
   const el = document.createElement('div');
-  el.className = 'card-tools';
+  el.className = className;
   tools.forEach((t) => {
     const toolName = t.trim();
     const img = document.createElement('img');
@@ -269,6 +293,13 @@ document.querySelectorAll('section[id]').forEach((s) => {
 });
 
 /* ── SCROLL: nav alignment + Jaemin Ryu FLIP animation ── */
+document.querySelectorAll('.nav-link').forEach((link) => {
+  link.addEventListener('click', () => {
+    document.querySelectorAll('.nav-link').forEach((l) => l.classList.remove('active'));
+    link.classList.add('active');
+  });
+});
+
 const navEl      = document.querySelector('nav');
 const nameBadge  = document.getElementById('nameBadge');
 const headerH1   = document.querySelector('header h1');
@@ -278,14 +309,17 @@ const SCROLL_THRESHOLD = 90;
 let isScrolledPast  = false;
 let badgeOutTimeout = null;
 
-window.addEventListener('scroll', () => {
+function updateScrollChrome() {
   fadeSubtitle();
   const past = window.scrollY > SCROLL_THRESHOLD;
   navEl.classList.toggle('scrolled', past);
   if (past === isScrolledPast) return;
   isScrolledPast = past;
   past ? flyBadgeIn() : flyBadgeOut();
-}, { passive: true });
+}
+
+window.addEventListener('scroll', updateScrollChrome, { passive: true });
+window.addEventListener('hashchange', () => setTimeout(updateScrollChrome, 0));
 
 function fadeSubtitle() {
   const progress = Math.min(window.scrollY / SCROLL_THRESHOLD, 1);
@@ -297,9 +331,10 @@ function fadeSubtitle() {
 function flyBadgeIn() {
   clearTimeout(badgeOutTimeout);
   const h1Rect = headerH1.getBoundingClientRect();
+  const badgeRight = parseFloat(getComputedStyle(nameBadge).right) || 78;
 
   // Badge natural center (top-right, vertically centred in nav)
-  const badgeCenterX = window.innerWidth - 52 - nameBadge.offsetWidth / 2;
+  const badgeCenterX = window.innerWidth - badgeRight - nameBadge.offsetWidth / 2;
   const badgeCenterY = NAV_H / 2;
 
   const dx    = (h1Rect.left + h1Rect.width  / 2) - badgeCenterX;
@@ -354,6 +389,7 @@ document.getElementById('toTopBtn').addEventListener('click', () => {
 });
 
 /* ── INIT ── */
-fadeSubtitle();
+updateScrollChrome();
+setTimeout(updateScrollChrome, 0);
 initShowcase();
 buildGrid();
