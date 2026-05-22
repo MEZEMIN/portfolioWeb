@@ -1,0 +1,11 @@
+001.png, Spaceship Explosion (2025), Houdini FX Work, https://www.youtube.com/watch?v=Y19dV0GHpso, 사용된 툴: Houdini/Nuke/FC
+002.png, DOMO London Fog Ads (2026), AI Advertisment Video, https://vimeo.com/1166855560?fl=pl&fe=vl, 사용된 툴:  Higgs/FC
+003.png, DOMO Valentine's Day Ads (2026), AI Advertisment Video, https://vimeo.com/1166855862?fl=pl&fe=vl, 사용된 툴:  Higgs/FC
+004.png, DOMO Vanilla Matcha Ads (2026), AI Advertisment Video, https://vimeo.com/1166856113?fl=pl&fe=vl, 사용된 툴:  Higgs/FC
+005.png, Ice Age (2025), Houdini FX Work, https://www.youtube.com/watch?v=xcVSfdI7GzU, 사용된 툴:  Houdini
+006.png, Thanos Disintegration Effect (2025), Houdini FX Work, https://www.youtube.com/watch?v=NaMJYXNi6JI, 사용된 툴:  Houdini/Nuke/FC
+007.png, Miserable - Zemistein (2026), AI Music Video, https://www.youtube.com/watch?v=lgILl71Ya2E, 사용된 툴:  Higgs/FC
+008.png, Campbell River (2024), a film by Jaemin Ryu, https://www.youtube.com/watch?v=5PBApE-Evmc, 사용된 툴:  FC
+009.png, Saturna Island (2024), a film by Jaemin Ryu, https://www.youtube.com/watch?v=r97RPVpzYbg, 사용된 툴:  FC
+010.png, East Point, Saturna Island (2024), a film by Jaemin Ryu, https://www.youtube.com/watch?v=hWSxcE-dMsg, 사용된 툴:  FC
+011.png, Saturna Island 2 (2024), a film by Jaemin Ryu, https://www.youtube.com/watch?v=dpNSjN1MrBw&t=2s, 사용된 툴:  FC

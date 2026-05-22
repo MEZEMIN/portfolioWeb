@@ -226,6 +226,7 @@ header h1 {
   font-weight: 400;
   letter-spacing: 0.20em;
   color: var(--text-muted);
+  will-change: opacity, transform, filter;
 }
 .subtitle span { margin: 0 10px; opacity: 0.45; }
 
@@ -266,14 +267,14 @@ main {
   background: #bbb8b0;
   border-radius: var(--radius);
 }
-.showcase-thumb img {
+.showcase-thumb > .thumbnail-img {
   position: absolute;
   inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
   transition: transform 0.5s ease;
 }
-.showcase-card:hover .showcase-thumb img { transform: scale(1.03); }
+.showcase-card:hover .showcase-thumb > .thumbnail-img { transform: scale(1.03); }
 
 /* ── THUMBNAIL OVERLAYS (shared) ── */
 .card-overlay {
@@ -361,32 +362,29 @@ main {
   bottom: 12px;
   left: 12px;
   display: flex;
-  gap: 4px;
+  gap: 7px;
   align-items: center;
-  z-index: 3;
+  z-index: 4;
   pointer-events: none;
-  background: rgba(0, 0, 0, 0.52);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-radius: 8px;
-  padding: 5px 7px;
 }
 
 .tool-logo {
-  width: 22px;
-  height: 22px;
+  position: static;
+  flex: 0 0 auto;
+  display: block;
+  width: 30px;
+  height: 30px;
   object-fit: contain;
   opacity: 1;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.65));
 }
 
 .showcase-card .card-tools {
   bottom: 18px;
   left: 18px;
-  gap: 6px;
-  border-radius: 10px;
-  padding: 6px 9px;
+  gap: 10px;
 }
-.showcase-card .tool-logo { width: 28px; height: 28px; }
+.showcase-card .tool-logo { width: 44px; height: 44px; }
 
 /* ── VIDEO GRID (3 columns, full-width below featured) ── */
 .video-grid {
@@ -412,14 +410,14 @@ main {
   background: #bbb8b0;
   border-radius: var(--radius-sm);
 }
-.grid-card .card-thumb img {
+.grid-card .card-thumb > .thumbnail-img {
   position: absolute;
   inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
   transition: transform 0.38s ease;
 }
-.grid-card:hover .card-thumb img { transform: scale(1.06); }
+.grid-card:hover .card-thumb > .thumbnail-img { transform: scale(1.06); }
 
 /* ── SHIMMER ── */
 .is-loading {
@@ -504,6 +502,10 @@ main {
   transform: scale(0.93) translateY(12px);
   transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+.modal-dialog.is-portrait {
+  width: min(90vw, 48vh);
+  max-width: 520px;
+}
 .modal.is-open .modal-dialog { transform: scale(1) translateY(0); }
 
 .modal-close {
@@ -524,11 +526,12 @@ main {
 .video-aspect-box {
   position: relative;
   width: 100%;
-  padding-top: 56.25%;
+  aspect-ratio: 16 / 9;
   background: #000;
   border-radius: var(--radius);
   overflow: hidden;
 }
+.modal-dialog.is-portrait .video-aspect-box { aspect-ratio: 9 / 16; }
 .video-inner {
   position: absolute;
   inset: 0;

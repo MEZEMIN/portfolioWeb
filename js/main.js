@@ -14,6 +14,7 @@ const videos = [
     category: 'AI ADVERTISEMENT VIDEO',
     year: '2026',
     type: 'vimeo', id: '1166855560',
+    aspect: 'portrait',
     tools: ['Higgs', 'FC'],
   },
   {
@@ -22,6 +23,7 @@ const videos = [
     category: 'AI ADVERTISEMENT VIDEO',
     year: '2026',
     type: 'vimeo', id: '1166855862',
+    aspect: 'portrait',
     tools: ['Higgs', 'FC'],
   },
   {
@@ -30,6 +32,7 @@ const videos = [
     category: 'AI ADVERTISEMENT VIDEO',
     year: '2026',
     type: 'vimeo', id: '1166856113',
+    aspect: 'portrait',
     tools: ['Higgs', 'FC'],
   },
   {
@@ -38,7 +41,7 @@ const videos = [
     category: 'HOUDINI FX WORK',
     year: '2025',
     type: 'youtube', id: 'xcVSfdI7GzU',
-    tools: ['Houdini', 'Nuke'],
+    tools: ['Houdini'],
   },
   {
     thumb: 'Thumnail/006.png',
@@ -50,7 +53,7 @@ const videos = [
   },
   {
     thumb: 'Thumnail/007.png',
-    title: 'Miserable — Zemistein',
+    title: 'Miserable - Zemistein',
     category: 'AI MUSIC VIDEO',
     year: '2026',
     type: 'youtube', id: 'lgILl71Ya2E',
@@ -87,6 +90,7 @@ const videos = [
     category: 'A FILM BY JAEMIN RYU',
     year: '2024',
     type: 'youtube', id: 'dpNSjN1MrBw',
+    start: 2,
     tools: ['FC'],
   },
 ];
@@ -129,28 +133,35 @@ const videoGrid     = document.getElementById('videoGrid');
 const modal         = document.getElementById('videoModal');
 const modalOverlay  = document.getElementById('modalOverlay');
 const modalClose    = document.getElementById('modalClose');
+const modalDialog   = modal.querySelector('.modal-dialog');
 const videoInner    = document.getElementById('videoInner');
 
 /* ── OPEN VIDEO ── */
 function openVideo(video) {
-  if (video.type === 'youtube') {
-    const win = window.open(
-      `https://www.youtube.com/watch?v=${video.id}`,
-      '_blank', 'noopener,noreferrer'
-    );
-    if (win) win.opener = null;
-    return;
-  }
   openModal(video);
 }
 
 /* ── VIMEO MODAL ── */
 function openModal(video) {
+  const youtubeParams = new URLSearchParams({
+    autoplay: '1',
+    rel: '0',
+    modestbranding: '1',
+  });
+  if (video.start) youtubeParams.set('start', String(video.start));
+
+  const src = video.type === 'youtube'
+    ? `https://www.youtube.com/embed/${video.id}?${youtubeParams}`
+    : `https://player.vimeo.com/video/${video.id}?autoplay=1&title=0&byline=0&portrait=0&color=ffffff`;
+
+  modalDialog.classList.toggle('is-portrait', video.aspect === 'portrait');
   videoInner.innerHTML = `
     <iframe
-      src="https://player.vimeo.com/video/${video.id}?autoplay=1&title=0&byline=0&portrait=0&color=ffffff"
+      src="${src}"
+      title="${video.title}"
       frameborder="0"
-      allow="autoplay; fullscreen; picture-in-picture"
+      allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+      referrerpolicy="strict-origin-when-cross-origin"
       allowfullscreen
     ></iframe>`;
   modal.classList.add('is-open');
@@ -160,6 +171,7 @@ function openModal(video) {
 
 function closeModal() {
   videoInner.innerHTML = '';
+  modalDialog.classList.remove('is-portrait');
   modal.classList.remove('is-open');
   modal.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
@@ -176,10 +188,14 @@ function buildToolLogos(tools) {
   const el = document.createElement('div');
   el.className = 'card-tools';
   tools.forEach((t) => {
+    const toolName = t.trim();
     const img = document.createElement('img');
-    img.src = `Logo/${t}.png`;
-    img.alt = t;
+    img.src = `Logo/${toolName}.png`;
+    img.alt = `${toolName} logo`;
+    img.title = toolName;
     img.className = 'tool-logo';
+    img.loading = 'lazy';
+    img.decoding = 'async';
     el.appendChild(img);
   });
   return el;
@@ -206,6 +222,7 @@ function createGridCard(video) {
   thumb.className = 'card-thumb';
 
   const img = document.createElement('img');
+  img.className = 'thumbnail-img';
   img.alt = video.title;
   img.src = video.thumb;
 
@@ -255,18 +272,27 @@ document.querySelectorAll('section[id]').forEach((s) => {
 const navEl      = document.querySelector('nav');
 const nameBadge  = document.getElementById('nameBadge');
 const headerH1   = document.querySelector('header h1');
+const subtitleEl = document.querySelector('.subtitle');
 const NAV_H      = 70; // matches CSS nav height
 const SCROLL_THRESHOLD = 90;
 let isScrolledPast  = false;
 let badgeOutTimeout = null;
 
 window.addEventListener('scroll', () => {
+  fadeSubtitle();
   const past = window.scrollY > SCROLL_THRESHOLD;
   navEl.classList.toggle('scrolled', past);
   if (past === isScrolledPast) return;
   isScrolledPast = past;
   past ? flyBadgeIn() : flyBadgeOut();
 }, { passive: true });
+
+function fadeSubtitle() {
+  const progress = Math.min(window.scrollY / SCROLL_THRESHOLD, 1);
+  subtitleEl.style.opacity = String(1 - progress);
+  subtitleEl.style.transform = `translateY(${-8 * progress}px)`;
+  subtitleEl.style.filter = `blur(${2 * progress}px)`;
+}
 
 function flyBadgeIn() {
   clearTimeout(badgeOutTimeout);
@@ -328,5 +354,6 @@ document.getElementById('toTopBtn').addEventListener('click', () => {
 });
 
 /* ── INIT ── */
+fadeSubtitle();
 initShowcase();
 buildGrid();
