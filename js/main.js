@@ -6,6 +6,7 @@ const videos = [
     category: 'HOUDINI FX WORK',
     year: '2025',
     type: 'youtube', id: 'Y19dV0GHpso',
+    tools: ['Houdini', 'Nuke', 'FC'],
   },
   {
     thumb: 'Thumnail/002.png',
@@ -13,6 +14,7 @@ const videos = [
     category: 'AI ADVERTISEMENT VIDEO',
     year: '2026',
     type: 'vimeo', id: '1166855560',
+    tools: ['Higgs', 'FC'],
   },
   {
     thumb: 'Thumnail/003.png',
@@ -20,6 +22,7 @@ const videos = [
     category: 'AI ADVERTISEMENT VIDEO',
     year: '2026',
     type: 'vimeo', id: '1166855862',
+    tools: ['Higgs', 'FC'],
   },
   {
     thumb: 'Thumnail/004.png',
@@ -27,6 +30,7 @@ const videos = [
     category: 'AI ADVERTISEMENT VIDEO',
     year: '2026',
     type: 'vimeo', id: '1166856113',
+    tools: ['Higgs', 'FC'],
   },
   {
     thumb: 'Thumnail/005.png',
@@ -34,6 +38,7 @@ const videos = [
     category: 'HOUDINI FX WORK',
     year: '2025',
     type: 'youtube', id: 'xcVSfdI7GzU',
+    tools: ['Houdini', 'Nuke'],
   },
   {
     thumb: 'Thumnail/006.png',
@@ -41,6 +46,7 @@ const videos = [
     category: 'HOUDINI FX WORK',
     year: '2025',
     type: 'youtube', id: 'NaMJYXNi6JI',
+    tools: ['Houdini', 'Nuke', 'FC'],
   },
   {
     thumb: 'Thumnail/007.png',
@@ -48,7 +54,8 @@ const videos = [
     category: 'AI MUSIC VIDEO',
     year: '2026',
     type: 'youtube', id: 'lgILl71Ya2E',
-    featured: true,  // always the large showcase card
+    featured: true,
+    tools: ['Higgs', 'FC'],
   },
   {
     thumb: 'Thumnail/008.png',
@@ -56,6 +63,7 @@ const videos = [
     category: 'A FILM BY JAEMIN RYU',
     year: '2024',
     type: 'youtube', id: '5PBApE-Evmc',
+    tools: ['FC'],
   },
   {
     thumb: 'Thumnail/009.png',
@@ -63,6 +71,7 @@ const videos = [
     category: 'A FILM BY JAEMIN RYU',
     year: '2024',
     type: 'youtube', id: 'r97RPVpzYbg',
+    tools: ['FC'],
   },
   {
     thumb: 'Thumnail/010.png',
@@ -70,6 +79,7 @@ const videos = [
     category: 'A FILM BY JAEMIN RYU',
     year: '2024',
     type: 'youtube', id: 'hWSxcE-dMsg',
+    tools: ['FC'],
   },
   {
     thumb: 'Thumnail/011.png',
@@ -77,6 +87,7 @@ const videos = [
     category: 'A FILM BY JAEMIN RYU',
     year: '2024',
     type: 'youtube', id: 'dpNSjN1MrBw',
+    tools: ['FC'],
   },
 ];
 
@@ -160,12 +171,30 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
 });
 
+/* ── TOOL LOGOS: build a row of logo imgs ── */
+function buildToolLogos(tools) {
+  const el = document.createElement('div');
+  el.className = 'card-tools';
+  tools.forEach((t) => {
+    const img = document.createElement('img');
+    img.src = `Logo/${t}.png`;
+    img.alt = t;
+    img.className = 'tool-logo';
+    el.appendChild(img);
+  });
+  return el;
+}
+
 /* ── SHOWCASE: always shows the featured video (007) ── */
 function initShowcase() {
   showcaseImg.src           = FEATURED.thumb;
   showcaseTitle.textContent = FEATURED.title;
   showcaseSub.textContent   = `${FEATURED.category} · ${FEATURED.year}`;
   showcaseCard.addEventListener('click', () => openVideo(FEATURED));
+
+  if (FEATURED.tools?.length) {
+    document.querySelector('.showcase-thumb').appendChild(buildToolLogos(FEATURED.tools));
+  }
 }
 
 /* ── GRID CARD ── */
@@ -193,6 +222,7 @@ function createGridCard(video) {
   thumb.appendChild(img);
   thumb.appendChild(overlay);
   thumb.appendChild(hoverEl);
+  if (video.tools?.length) thumb.appendChild(buildToolLogos(video.tools));
   card.appendChild(thumb);
 
   card.addEventListener('click', () => openVideo(video));

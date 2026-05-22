@@ -355,6 +355,30 @@ main {
 .grid-card .play-circle { width: 32px; height: 32px; }
 .grid-card .play-icon   { border-width: 4.5px 0 4.5px 9px; margin-left: 2px; }
 
+/* ── TOOL LOGOS ── */
+.card-tools {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.tool-logo {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  border-radius: 6px;
+  opacity: 0.90;
+  filter: drop-shadow(0 1px 4px rgba(0,0,0,0.55));
+}
+
+.showcase-card .card-tools { bottom: 16px; left: 16px; gap: 7px; }
+.showcase-card .tool-logo  { width: 34px; height: 34px; border-radius: 8px; }
+
 /* ── VIDEO GRID (3 columns, full-width below featured) ── */
 .video-grid {
   display: grid;
