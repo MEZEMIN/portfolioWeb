@@ -1,4 +1,4 @@
-/* ── VIDEO DATA (from CardInfo.txt) ── */
+/* ── VIDEO DATA ── */
 const videos = [
   {
     thumb: 'Thumnail/001.png',
@@ -36,7 +36,7 @@ const videos = [
     year: '2026',
     type: 'vimeo', id: '1166856113',
     tools: ['Higgs', 'FC'],
-    description: "Planned and produced a short social media advertisement for DOMO Tea's London Vanilla Matcha, with the ad video created using AI.",
+    description: "Planned and produced a short social media advertisement for DOMO Tea's Vanilla Matcha, with the ad video created using AI.",
   },
   {
     thumb: 'Thumnail/005.png',
@@ -68,7 +68,6 @@ Finally, all visual elements were composited and enhanced in NukeX to achieve th
     category: 'AI MUSIC VIDEO',
     year: '2026',
     type: 'youtube', id: 'lgILl71Ya2E',
-    featured: true,
     tools: ['Higgs', 'FC'],
     description: 'Created a fictional character named Zemistein and produced a music video using AI.',
   },
@@ -111,77 +110,42 @@ Finally, all visual elements were composited and enhanced in NukeX to achieve th
   },
 ];
 
-const FEATURED = videos.find((v) => v.featured); // always 007
+/* ── VIDEO MODAL ── */
+const modal        = document.getElementById('videoModal');
+const modalOverlay = document.getElementById('modalOverlay');
+const modalClose   = document.getElementById('modalClose');
+const modalDialog  = modal.querySelector('.modal-dialog');
+const modalTitle   = document.getElementById('modalTitle');
+const modalDesc    = document.getElementById('modalDescription');
+const modalTools   = document.getElementById('modalTools');
+const videoInner   = document.getElementById('videoInner');
 
-/* ── BLOB MOUSE TRACKING ── */
-const blobEls = [
-  document.querySelector('.bg-blob--1'),
-  document.querySelector('.bg-blob--2'),
-  document.querySelector('.bg-blob--3'),
-];
-const blobState = [
-  { cx: 0, cy: 0, spd: 0.035, mx:  0.22, my:  0.18 }, // center blob: subtle movement
-  { cx: 0, cy: 0, spd: 0.030, mx: -0.28, my: -0.22 },
-  { cx: 0, cy: 0, spd: 0.055, mx: -0.20, my:  0.28 },
-];
-
-let mouseX = window.innerWidth / 2;
-let mouseY = window.innerHeight / 2;
-window.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
-
-(function tickBlobs() {
-  const ox = mouseX - window.innerWidth  / 2;
-  const oy = mouseY - window.innerHeight / 2;
-  blobState.forEach((b, i) => {
-    b.cx += (ox * b.mx - b.cx) * b.spd;
-    b.cy += (oy * b.my - b.cy) * b.spd;
-    blobEls[i].style.transform = `translate(${b.cx}px, ${b.cy}px)`;
-  });
-  requestAnimationFrame(tickBlobs);
-})();
-
-/* ── DOM REFS ── */
-const showcaseCard  = document.getElementById('showcaseCard');
-const showcaseImg   = document.getElementById('showcaseImg');
-const showcaseTitle = document.getElementById('showcaseTitle');
-const showcaseSub   = document.getElementById('showcaseSub');
-const videoGrid     = document.getElementById('videoGrid');
-const modal         = document.getElementById('videoModal');
-const modalOverlay  = document.getElementById('modalOverlay');
-const modalClose    = document.getElementById('modalClose');
-const modalDialog   = modal.querySelector('.modal-dialog');
-const modalTitle    = document.getElementById('modalTitle');
-const modalDesc     = document.getElementById('modalDescription');
-const modalTools    = document.getElementById('modalTools');
-const videoInner    = document.getElementById('videoInner');
-
-/* ── OPEN VIDEO ── */
-function openVideo(video) {
-  openModal(video);
-}
-
-/* ── VIMEO MODAL ── */
-function openModal(video) {
-  const youtubeParams = new URLSearchParams({
-    autoplay: '1',
-    rel: '0',
-    modestbranding: '1',
-  });
-  if (video.start) youtubeParams.set('start', String(video.start));
+function openVideoModal(video) {
+  const qs = new URLSearchParams({ autoplay: '1', rel: '0', modestbranding: '1' });
+  if (video.start) qs.set('start', String(video.start));
 
   const src = video.type === 'youtube'
-    ? `https://www.youtube.com/embed/${video.id}?${youtubeParams}`
+    ? `https://www.youtube.com/embed/${video.id}?${qs}`
     : `https://player.vimeo.com/video/${video.id}?autoplay=1&title=0&byline=0&portrait=0&color=ffffff`;
 
   modalDialog.classList.toggle('is-portrait', video.aspect === 'portrait');
   modalTitle.textContent = `${video.title} (${video.year})`;
-  modalDesc.textContent = video.description || 'Video description coming soon.';
-  modalTools.replaceChildren(buildToolLogos(video.tools || [], 'modal-tool-logos'));
+  modalDesc.textContent = video.description || '';
+
+  modalTools.replaceChildren();
+  (video.tools || []).forEach(t => {
+    const img = document.createElement('img');
+    img.src = `Logo/${t.trim()}.png`;
+    img.alt = t;
+    img.title = t;
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    modalTools.appendChild(img);
+  });
 
   const iframe = document.createElement('iframe');
   iframe.src = src;
   iframe.title = video.title;
-  iframe.frameBorder = '0';
   iframe.allow = 'autoplay; fullscreen; picture-in-picture; encrypted-media';
   iframe.referrerPolicy = 'strict-origin-when-cross-origin';
   iframe.allowFullscreen = true;
@@ -192,7 +156,7 @@ function openModal(video) {
   document.body.style.overflow = 'hidden';
 }
 
-function closeModal() {
+function closeVideoModal() {
   videoInner.replaceChildren();
   modalTools.replaceChildren();
   modalDialog.classList.remove('is-portrait');
@@ -201,195 +165,210 @@ function closeModal() {
   document.body.style.overflow = '';
 }
 
-modalOverlay.addEventListener('click', closeModal);
-modalClose.addEventListener('click', closeModal);
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
+modalOverlay.addEventListener('click', closeVideoModal);
+modalClose.addEventListener('click', closeVideoModal);
+
+/* ── INFO MODAL (About / Contact) ── */
+const infoModal   = document.getElementById('infoModal');
+const infoOverlay = document.getElementById('infoOverlay');
+const infoClose   = document.getElementById('infoClose');
+const infoContent = document.getElementById('infoContent');
+
+function openInfoModal(html) {
+  infoContent.innerHTML = html;
+  infoModal.classList.add('is-open');
+  infoModal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeInfoModal() {
+  infoModal.classList.remove('is-open');
+  infoModal.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+infoOverlay.addEventListener('click', closeInfoModal);
+infoClose.addEventListener('click', closeInfoModal);
+
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if (modal.classList.contains('is-open')) closeVideoModal();
+  if (infoModal.classList.contains('is-open')) closeInfoModal();
 });
 
-/* ── TOOL LOGOS: build a row of logo imgs ── */
-function buildToolLogos(tools, className = 'card-tools') {
-  const el = document.createElement('div');
-  el.className = className;
-  tools.forEach((t) => {
-    const toolName = t.trim();
-    const img = document.createElement('img');
-    img.src = `Logo/${toolName}.png`;
-    img.alt = `${toolName} logo`;
-    img.title = toolName;
-    img.className = 'tool-logo';
-    img.loading = 'lazy';
-    img.decoding = 'async';
-    el.appendChild(img);
-  });
-  return el;
-}
+/* ── CARD FACTORIES ── */
+const ALL_LOGOS = ['Houdini', 'Maya', 'Ps', 'Ai', 'FC', 'Nuke', 'Higgs'];
 
-/* ── SHOWCASE: always shows the featured video (007) ── */
-function initShowcase() {
-  showcaseImg.src           = FEATURED.thumb;
-  showcaseTitle.textContent = FEATURED.title;
-  showcaseSub.textContent   = `${FEATURED.category} · ${FEATURED.year}`;
-  showcaseCard.addEventListener('click', () => openVideo(FEATURED));
-
-  if (FEATURED.tools?.length) {
-    document.querySelector('.showcase-thumb').appendChild(buildToolLogos(FEATURED.tools));
-  }
-}
-
-/* ── GRID CARD ── */
-function createGridCard(video) {
+function createVideoCard(video, featured = false) {
   const card = document.createElement('div');
-  card.className = 'grid-card glass-card';
-
-  const thumb = document.createElement('div');
-  thumb.className = 'card-thumb';
+  card.className = 'bcard bcard-video' + (featured ? ' bcard-featured' : '');
 
   const img = document.createElement('img');
-  img.className = 'thumbnail-img';
-  img.alt = video.title;
+  img.className = 'thumb';
   img.src = video.thumb;
+  img.alt = video.title;
+  img.loading = 'lazy';
 
-  const overlay = document.createElement('div');
-  overlay.className = 'card-overlay';
-  overlay.innerHTML = `
-    <p class="ov-title">${video.title}</p>
-    <p class="ov-meta">${video.category} · ${video.year}</p>`;
+  const grad = document.createElement('div');
+  grad.className = 'vcard-grad';
 
-  const hoverEl = document.createElement('div');
-  hoverEl.className = 'card-hover';
-  hoverEl.innerHTML = `<div class="play-circle"><div class="play-icon"></div></div>`;
+  const bottom = document.createElement('div');
+  bottom.className = 'vcard-bottom';
 
-  thumb.appendChild(img);
-  thumb.appendChild(overlay);
-  thumb.appendChild(hoverEl);
-  if (video.tools?.length) thumb.appendChild(buildToolLogos(video.tools));
-  card.appendChild(thumb);
+  const titleEl = document.createElement('div');
+  titleEl.className = 'vcard-title';
+  titleEl.textContent = video.title;
 
-  card.addEventListener('click', () => openVideo(video));
+  const metaEl = document.createElement('div');
+  metaEl.className = 'vcard-meta';
+  metaEl.textContent = `${video.category} · ${video.year}`;
+
+  const toolsEl = document.createElement('div');
+  toolsEl.className = 'vcard-tools';
+  (video.tools || []).forEach(t => {
+    const tImg = document.createElement('img');
+    tImg.src = `Logo/${t.trim()}.png`;
+    tImg.alt = t;
+    tImg.loading = 'lazy';
+    toolsEl.appendChild(tImg);
+  });
+
+  bottom.append(titleEl, metaEl, toolsEl);
+
+  const playWrap = document.createElement('div');
+  playWrap.className = 'play-wrap';
+  playWrap.innerHTML = '<div class="play-circle"><div class="play-tri"></div></div>';
+
+  card.append(img, grad, bottom, playWrap);
+  card.addEventListener('click', () => openVideoModal(video));
   return card;
 }
 
-/* ── BUILD GRID (all non-featured videos) ── */
-function buildGrid() {
-  videos
-    .filter((v) => !v.featured)
-    .forEach((v) => videoGrid.appendChild(createGridCard(v)));
-}
+function createToolsCard() {
+  const card = document.createElement('div');
+  card.className = 'bcard bcard-tools';
 
-/* ── NAV SCROLL HIGHLIGHT ── */
-document.querySelectorAll('section[id]').forEach((s) => {
-  new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        document.querySelectorAll('.nav-link').forEach((l) => l.classList.remove('active'));
-        const a = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
-        if (a) a.classList.add('active');
-      });
-    },
-    { rootMargin: '-40% 0px -55% 0px' }
-  ).observe(s);
-});
+  const label = document.createElement('span');
+  label.className = 'tools-label';
+  label.textContent = 'Tools';
 
-/* ── SCROLL: nav alignment + Jaemin Ryu FLIP animation ── */
-document.querySelectorAll('.nav-link').forEach((link) => {
-  link.addEventListener('click', () => {
-    document.querySelectorAll('.nav-link').forEach((l) => l.classList.remove('active'));
-    link.classList.add('active');
+  const logos = document.createElement('div');
+  logos.className = 'tools-logos';
+  ALL_LOGOS.forEach(name => {
+    const img = document.createElement('img');
+    img.src = `Logo/${name}.png`;
+    img.alt = name;
+    img.title = name;
+    img.loading = 'lazy';
+    logos.appendChild(img);
   });
-});
 
-const navEl      = document.querySelector('nav');
-const nameBadge  = document.getElementById('nameBadge');
-const headerH1   = document.querySelector('header h1');
-const subtitleEl = document.querySelector('.subtitle');
-const NAV_H      = 70; // matches CSS nav height
-const SCROLL_THRESHOLD = 90;
-let isScrolledPast  = false;
-let badgeOutTimeout = null;
-
-function updateScrollChrome() {
-  fadeSubtitle();
-  const past = window.scrollY > SCROLL_THRESHOLD;
-  navEl.classList.toggle('scrolled', past);
-  if (past === isScrolledPast) return;
-  isScrolledPast = past;
-  past ? flyBadgeIn() : flyBadgeOut();
+  card.append(label, logos);
+  return card;
 }
 
-window.addEventListener('scroll', updateScrollChrome, { passive: true });
-window.addEventListener('hashchange', () => setTimeout(updateScrollChrome, 0));
-
-function fadeSubtitle() {
-  const progress = Math.min(window.scrollY / SCROLL_THRESHOLD, 1);
-  subtitleEl.style.opacity = String(1 - progress);
-  subtitleEl.style.transform = `translateY(${-8 * progress}px)`;
-  subtitleEl.style.filter = `blur(${2 * progress}px)`;
+function createContactCard() {
+  const card = document.createElement('div');
+  card.className = 'bcard bcard-contact';
+  card.style.cursor = 'pointer';
+  card.innerHTML = `
+    <div class="contact-icon-ring">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+      </svg>
+    </div>
+    <span class="contact-label">Contact</span>
+  `;
+  card.addEventListener('click', () => {
+    openInfoModal(`
+      <h2 class="info-heading">Contact</h2>
+      <div class="contact-rows">
+        <div>
+          <div class="contact-row-label">Email</div>
+          <a class="contact-row-val" href="mailto:zemin2k@gmail.com">zemin2k@gmail.com</a>
+        </div>
+        <div>
+          <div class="contact-row-label">Phone</div>
+          <a class="contact-row-val" href="tel:+12369718044">+1 236 971 8044</a>
+        </div>
+      </div>
+    `);
+  });
+  return card;
 }
 
-function flyBadgeIn() {
-  clearTimeout(badgeOutTimeout);
-  const h1Rect = headerH1.getBoundingClientRect();
-  const badgeRight = parseFloat(getComputedStyle(nameBadge).right) || 78;
-
-  // Badge natural center (top-right, vertically centred in nav)
-  const badgeCenterX = window.innerWidth - badgeRight - nameBadge.offsetWidth / 2;
-  const badgeCenterY = NAV_H / 2;
-
-  const dx    = (h1Rect.left + h1Rect.width  / 2) - badgeCenterX;
-  const dy    = (h1Rect.top  + h1Rect.height / 2) - badgeCenterY;
-  const scale = h1Rect.height / (nameBadge.offsetHeight || 1);
-
-  // Hide the header h1 instantly (keeps layout space)
-  headerH1.style.transition = 'none';
-  headerH1.style.opacity    = '0';
-
-  // Teleport badge to h1's visual position
-  nameBadge.style.transition = 'none';
-  nameBadge.style.opacity    = '1';
-  nameBadge.style.transform  = `translate(${dx}px,${dy}px) scale(${scale})`;
-  nameBadge.classList.add('visible');
-
-  // Force reflow, then fly to natural position
-  nameBadge.offsetHeight; // eslint-disable-line no-unused-expressions
-  nameBadge.style.transition = 'transform 0.65s cubic-bezier(0.4,0,0.2,1)';
-  nameBadge.style.transform  = 'none';
+function createNameCard() {
+  const card = document.createElement('div');
+  card.className = 'bcard bcard-name';
+  card.innerHTML = '<span class="name-text">[Jaemin Ryu]</span>';
+  return card;
 }
 
-function flyBadgeOut() {
-  nameBadge.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
-  nameBadge.style.opacity    = '0';
-  nameBadge.style.transform  = 'translateX(14px)';
-
-  badgeOutTimeout = setTimeout(() => {
-    nameBadge.classList.remove('visible');
-    nameBadge.removeAttribute('style');
-    headerH1.style.transition = 'opacity 0.35s ease';
-    headerH1.style.opacity    = '1';
-    setTimeout(() => { headerH1.style.transition = ''; headerH1.style.opacity = ''; }, 400);
-  }, 260);
+function createResumeCard() {
+  const card = document.createElement('a');
+  card.className = 'bcard bcard-resume';
+  card.href = 'Resum_FX.pdf';
+  card.download = 'Resum_FX.pdf';
+  card.innerHTML = `
+    <svg width="54" height="60" viewBox="0 0 54 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="4" y="2" width="34" height="44" rx="4" fill="#f0f0f0" stroke="#222" stroke-width="2.5"/>
+      <line x1="11" y1="13" x2="31" y2="13" stroke="#444" stroke-width="2" stroke-linecap="round"/>
+      <line x1="11" y1="20" x2="31" y2="20" stroke="#444" stroke-width="2" stroke-linecap="round"/>
+      <line x1="11" y1="27" x2="23" y2="27" stroke="#444" stroke-width="2" stroke-linecap="round"/>
+      <circle cx="38" cy="46" r="12" fill="#111"/>
+      <path d="M34 46.5l3.5 3.5 6-6" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="resume-label">Resume</span>
+  `;
+  return card;
 }
 
-/* ── DARK MODE (default on; light mode is the toggle) ── */
-let isDark = localStorage.getItem('dark-mode') !== 'false';
-// Class already applied by inline <head> script; keep state in sync
-document.documentElement.classList.toggle('dark-mode', isDark);
+function createAboutCard() {
+  const card = document.createElement('div');
+  card.className = 'bcard bcard-about';
+  card.style.cursor = 'pointer';
+  card.innerHTML = '<span class="about-badge">About</span>';
+  card.addEventListener('click', () => {
+    openInfoModal(`
+      <h2 class="info-heading">About</h2>
+      <p class="info-body">Hi, I'm Jaemin Ryu — a VFX artist, filmmaker, and designer.</p>
+      <p class="info-body">I work across visual effects, video production, and design, with a strong focus on translating creative vision into polished, production-ready results. I stay closely attuned to emerging tools and workflows — particularly AI-driven pipelines — and I'm quick to integrate new technology into real projects rather than treating it as an experiment.</p>
+      <p class="info-body">Whether it's a cinematic VFX shot, a branded video, or a design system, I bring both technical precision and a director's eye to every project.</p>
+    `);
+  });
+  return card;
+}
 
-document.getElementById('darkToggle').addEventListener('click', () => {
-  isDark = !isDark;
-  document.documentElement.classList.toggle('dark-mode', isDark);
-  document.getElementById('darkToggle').setAttribute('aria-pressed', String(isDark));
-  localStorage.setItem('dark-mode', String(isDark));
-});
+/* ── BENTO GRID ── */
+// Layout: 4 cols × 3 rows
+// Row 1: [Spaceship (span 2)] [Tools      ] [Contact   ]
+// Row 2: [Miserable          ] [Jaemin Ryu (span 2)] [Ice Age   ]
+// Row 3: [Resume ] [Thanos  ] [About      ] [Campbell  ]
+const BENTO_VIDEOS = [0, 6, 4, 5, 7]; // Spaceship, Miserable, Ice Age, Thanos, Campbell
 
-/* ── SCROLL TO TOP ── */
-document.getElementById('toTopBtn').addEventListener('click', () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-});
+function buildBento() {
+  const bento = document.getElementById('bento');
+  let vi = 0;
 
-/* ── INIT ── */
-updateScrollChrome();
-setTimeout(updateScrollChrome, 0);
-initShowcase();
-buildGrid();
+  const cells = [
+    'video-featured', 'tools',   'contact',
+    'video',          'name',    'video',
+    'resume',         'video',   'about',   'video',
+  ];
+
+  cells.forEach(type => {
+    let el;
+    switch (type) {
+      case 'video-featured': el = createVideoCard(videos[BENTO_VIDEOS[vi++]], true); break;
+      case 'video':          el = createVideoCard(videos[BENTO_VIDEOS[vi++]]);       break;
+      case 'tools':          el = createToolsCard();   break;
+      case 'contact':        el = createContactCard(); break;
+      case 'name':           el = createNameCard();    break;
+      case 'resume':         el = createResumeCard();  break;
+      case 'about':          el = createAboutCard();   break;
+    }
+    bento.appendChild(el);
+  });
+}
+
+buildBento();

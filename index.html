@@ -3,109 +3,50 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jaemin Ryu — AI Commercial Video Creator</title>
+  <title>Jaemin Ryu — Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
-  <!-- Apply dark mode before paint to prevent flash -->
-  <script>if(localStorage.getItem('dark-mode')!=='false')document.documentElement.classList.add('dark-mode')</script>
 </head>
 <body>
 
-  <div class="bg-blob bg-blob--1" aria-hidden="true"></div>
-  <div class="bg-blob bg-blob--2" aria-hidden="true"></div>
-  <div class="bg-blob bg-blob--3" aria-hidden="true"></div>
+  <!-- Ticker -->
+  <div class="ticker-wrap" aria-label="Introduction">
+    <div class="ticker-inner">
+      <span class="ticker-text">Hi, I'm Jaemin Ryu — a VFX artist, filmmaker, and designer. I work across visual effects, video production, and design, with a strong focus on translating creative vision into polished, production-ready results. I stay closely attuned to emerging tools and workflows — particularly AI-driven pipelines — and I'm quick to integrate new technology into real projects rather than treating it as an experiment. &nbsp;&nbsp;&nbsp;✦&nbsp;&nbsp;&nbsp;</span>
+      <span class="ticker-text" aria-hidden="true">Hi, I'm Jaemin Ryu — a VFX artist, filmmaker, and designer. I work across visual effects, video production, and design, with a strong focus on translating creative vision into polished, production-ready results. I stay closely attuned to emerging tools and workflows — particularly AI-driven pipelines — and I'm quick to integrate new technology into real projects rather than treating it as an experiment. &nbsp;&nbsp;&nbsp;✦&nbsp;&nbsp;&nbsp;</span>
+    </div>
+  </div>
 
-  <nav>
-    <ul>
-      <li><a href="#work"    class="nav-link active">WORK</a></li>
-      <li><a href="#about"   class="nav-link">ABOUT</a></li>
-      <li><a href="#contact" class="nav-link">CONTACT</a></li>
-    </ul>
-  </nav>
+  <!-- Bento Grid -->
+  <main class="bento" id="bento"></main>
 
-  <header>
-    <h1>Jaemin Ryu</h1>
-    <p class="subtitle">
-      AI Commercial Video Creator <span>/</span> FX Artist <span>/</span> Designer
-    </p>
-  </header>
-
-  <main>
-    <section id="work">
-
-      <!-- Featured card: always Miserable — Zemistein (007) -->
-      <div class="showcase">
-        <div class="showcase-card glass-card" id="showcaseCard">
-          <div class="showcase-thumb">
-            <img class="thumbnail-img" id="showcaseImg" src="" alt="" />
-            <div class="card-overlay">
-              <p class="ov-title" id="showcaseTitle"></p>
-              <p class="ov-meta"  id="showcaseSub"></p>
-            </div>
-            <div class="card-hover">
-              <div class="play-circle"><div class="play-icon"></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Grid: all videos except featured -->
-      <div class="video-grid" id="videoGrid"></div>
-
-    </section>
-
-    <section id="about">
-      <div class="about-inner">
-        <h2>About</h2>
-        <p>Hi, I'm Jaemin Ryu — a VFX artist, filmmaker, and designer.</p>
-        <p>I work across visual effects, video production, and design, with a strong focus on translating creative vision into polished, production-ready results. I stay closely attuned to emerging tools and workflows — particularly AI-driven pipelines — and I'm quick to integrate new technology into real projects rather than treating it as an experiment. Adaptability isn't just a buzzword for me; it's how I keep my craft sharp and my output relevant in a fast-moving industry.</p>
-        <p>Whether it's a cinematic VFX shot, a branded video, or a design system, I bring both technical precision and a director's eye to every project.</p>
-      </div>
-    </section>
-
-    <section id="contact">
-      <div class="contact-inner">
-        <h2>Contact</h2>
-        <a href="mailto:zemin2k@gmail.com">zemin2k@gmail.com</a>
-      </div>
-    </section>
-  </main>
-
-  <!-- Modal: video only -->
+  <!-- Video Modal -->
   <div class="modal" id="videoModal" aria-hidden="true">
     <div class="modal-overlay" id="modalOverlay"></div>
-    <div class="modal-dialog">
+    <div class="modal-dialog" id="modalDialog">
       <button class="modal-close" id="modalClose" aria-label="Close">&#x2715;</button>
       <div class="modal-content">
         <div class="video-aspect-box">
           <div class="video-inner" id="videoInner"></div>
         </div>
-        <aside class="video-info-panel" aria-label="Video description">
+        <aside class="video-info-panel">
           <h3 id="modalTitle"></h3>
           <p id="modalDescription"></p>
-          <div class="modal-tools" id="modalTools" aria-label="Tools used"></div>
+          <div class="modal-tool-row" id="modalTools"></div>
         </aside>
       </div>
     </div>
   </div>
 
-  <!-- Fixed name badge: appears top-right on scroll -->
-  <div class="name-badge" id="nameBadge">Jaemin Ryu</div>
-
-  <!-- Quick menu: dark mode toggle + back to top -->
-  <div class="quick-menu">
-    <button class="qm-btn" id="darkToggle" aria-label="Toggle dark mode" aria-pressed="false">
-      <span class="icon-theme" aria-hidden="true"></span>
-    </button>
-    <button class="qm-btn" id="toTopBtn" aria-label="Back to top">
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"
-           stroke="currentColor" stroke-width="2"
-           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <polyline points="1,8.5 6,3.5 11,8.5"/>
-      </svg>
-    </button>
+  <!-- Info Modal (About / Contact) -->
+  <div class="info-modal" id="infoModal" aria-hidden="true">
+    <div class="info-overlay" id="infoOverlay"></div>
+    <div class="info-dialog" id="infoDialog">
+      <button class="info-close" id="infoClose" aria-label="Close">&#x2715;</button>
+      <div id="infoContent"></div>
+    </div>
   </div>
 
   <script src="js/main.js"></script>
