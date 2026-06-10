@@ -3,7 +3,7 @@
 :root {
   --bg:       #0d0d0d;
   --radius:   20px;
-  --gap:      12px;
+  --gap:      20px;
   --font:     'Bricolage Grotesque', system-ui, sans-serif;
   --ticker-h: 36px;
   --ticker-bg:#F5C518;
@@ -132,24 +132,20 @@ body {
   text-transform: uppercase;
 }
 
+/* tool logos: drop shadow, no dark pill */
 .vcard-tools {
   display: flex;
-  gap: 4px;
+  gap: 5px;
   align-items: center;
   align-self: flex-start;
-  background: rgba(0,0,0,0.52);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-radius: 20px;
-  padding: 4px 8px;
-  border: 1px solid rgba(255,255,255,0.10);
   margin-top: 6px;
 }
 
 .vcard-tools img {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   object-fit: contain;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,1)) drop-shadow(0 1px 3px rgba(0,0,0,0.9));
 }
 
 /* featured video card: spans 2 columns */
@@ -166,14 +162,13 @@ body {
 }
 
 .bcard-featured .vcard-tools {
-  padding: 5px 11px;
-  gap: 6px;
+  gap: 7px;
   margin-top: 8px;
 }
 
 .bcard-featured .vcard-tools img {
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
 }
 
 .bcard-video .play-wrap {
@@ -206,6 +201,39 @@ body {
   margin-left: 3px;
 }
 
+/* ── UIUX CARD ── */
+.bcard-uiux {
+  grid-column: span 2;
+}
+
+.bcard-uiux .vcard-grad {
+  background: linear-gradient(
+    0deg,
+    rgba(0,0,0,0.96) 0%,
+    rgba(0,0,0,0.72) 38%,
+    rgba(0,0,0,0.20) 65%,
+    rgba(0,0,0,0) 100%
+  );
+}
+
+.bcard-uiux .vcard-title {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.bcard-uiux .vcard-meta {
+  font-size: 12px;
+}
+
+.bcard-uiux .vcard-tools {
+  margin-top: 10px;
+}
+
+.bcard-uiux .vcard-tools img {
+  width: 28px;
+  height: 28px;
+}
+
 /* ── TOOLS CARD ── */
 .bcard-tools {
   background: #fff;
@@ -230,11 +258,11 @@ body {
   gap: 10px;
   justify-content: center;
   align-items: center;
-  max-width: 220px;
+  max-width: 240px;
 }
 
 .tools-logos img {
-  width: 50px; height: 50px;
+  width: 44px; height: 44px;
   object-fit: contain;
   flex-shrink: 0;
 }
@@ -273,7 +301,9 @@ body {
 /* ── NAME CARD ── */
 .bcard-name {
   grid-column: span 2;
-  background: linear-gradient(160deg, #5CB8F0 0%, #2060C0 55%);
+  background-image: url('../CardDesign/Rectangle001.png');
+  background-size: cover;
+  background-position: center;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -284,7 +314,7 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(148deg, transparent 50%, #00C853 50%, #00A040 100%);
+  background: rgba(0, 0, 0, 0.18);
   pointer-events: none;
 }
 
@@ -293,10 +323,10 @@ body {
   z-index: 1;
   font-size: clamp(34px, 3.8vw, 58px);
   font-weight: 800;
-  color: rgba(255,255,255,0.80);
+  color: rgba(255,255,255,0.92);
   letter-spacing: -0.03em;
   text-align: center;
-  text-shadow: 0 2px 20px rgba(0,0,0,0.2);
+  text-shadow: 0 2px 24px rgba(0,0,0,0.55), 0 1px 6px rgba(0,0,0,0.4);
   user-select: none;
 }
 
@@ -320,57 +350,112 @@ body {
 
 /* ── ABOUT CARD ── */
 .bcard-about {
-  background: linear-gradient(155deg, #1B5E20 0%, #388E3C 50%, #43A047 100%);
+  grid-column: span 2;
+  background: linear-gradient(155deg, #1B5E20 0%, #2E7D32 45%, #388E3C 100%);
+  padding: 26px 30px;
+  cursor: default;
+}
+.bcard-about:hover { transform: none; }
+
+.about-inner {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  height: 100%;
+}
+
+.about-left {
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-start;
-  padding: 18px 20px;
-  text-decoration: none;
-  cursor: pointer;
+  gap: 7px;
+  min-width: 110px;
 }
 
-.about-badge {
-  font-size: 22px;
+.about-title {
+  font-size: 46px;
   font-weight: 800;
   color: #fff;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.03em;
+  line-height: 1;
 }
 
-/* ── CTA CARD ── */
-.bcard-cta {
-  grid-column: span 2;
-  background: linear-gradient(135deg, #18182a 0%, #1e2240 50%, #162840 100%);
-  border: 1px solid rgba(255,255,255,0.07);
+.about-intro {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+
+.about-skills {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px 22px;
+  flex: 1;
+}
+
+.about-skill-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.about-skill-cat {
+  font-size: 8.5px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.about-skill-tools {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.92);
+  line-height: 1.3;
+}
+
+/* ── OTHER CARD ── */
+.bcard-other {
+  background: linear-gradient(145deg, #1a1a2e 0%, #16213e 55%, #0f3460 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  text-decoration: none;
   cursor: pointer;
 }
 
-.cta-label {
-  font-size: 26px;
+.other-grid-icon {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+}
+
+.other-dot {
+  width: 10px; height: 10px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.45);
+}
+
+.other-label {
+  font-size: 20px;
   font-weight: 800;
   color: #fff;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 
-.cta-email {
-  font-size: 13px;
-  color: rgba(255,255,255,0.5);
-  letter-spacing: 0.03em;
+.other-count {
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
-.cta-arrow {
-  font-size: 28px;
-  color: rgba(255,255,255,0.4);
-  margin-top: 4px;
-}
-
-/* ── INFO MODAL (About / Contact) ── */
+/* ── INFO MODAL (About / Contact / Other / Image) ── */
 .info-modal {
   position: fixed;
   inset: 0;
@@ -413,6 +498,18 @@ body {
 }
 .info-modal.is-open .info-dialog { transform: none; }
 
+.info-dialog.is-other {
+  width: min(94vw, 860px);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.info-dialog.is-image {
+  width: min(94vw, 1000px);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
 .info-close {
   position: absolute;
   top: 14px;
@@ -426,6 +523,7 @@ body {
   font-family: var(--font);
   line-height: 1;
   transition: color 0.2s;
+  z-index: 2;
 }
 .info-close:hover { color: #fff; }
 
@@ -463,6 +561,78 @@ body {
   display: block;
 }
 .contact-row-val:hover { text-decoration: underline; }
+
+/* ── IMAGE MODAL ── */
+.image-modal-img {
+  width: 100%;
+  border-radius: 12px;
+  display: block;
+}
+
+/* ── OTHER VIDEOS GRID ── */
+.other-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.other-thumb-card {
+  position: relative;
+  cursor: pointer;
+  border-radius: 10px;
+  overflow: hidden;
+  aspect-ratio: 16/9;
+  background: #111;
+}
+
+.other-thumb-card img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+.other-thumb-card:hover img { transform: scale(1.06); }
+
+.other-thumb-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.2) 55%, transparent 100%);
+  pointer-events: none;
+}
+
+.other-thumb-info {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 8px 10px;
+  pointer-events: none;
+}
+
+.other-thumb-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.3;
+}
+
+.other-thumb-meta {
+  font-size: 8.5px;
+  color: rgba(255,255,255,0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-top: 2px;
+}
+
+.other-thumb-play {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.22s;
+  pointer-events: none;
+}
+.other-thumb-card:hover .other-thumb-play { opacity: 1; }
 
 /* ── MODAL ── */
 .modal {
@@ -615,14 +785,20 @@ body {
   .bento { grid-template-columns: repeat(3, 1fr); }
   .bcard-featured { grid-column: span 1; }
   .bcard-name { grid-column: span 2; }
-  .bcard-cta  { grid-column: span 2; }
+  .bcard-uiux { grid-column: span 2; }
+  .bcard-about { grid-column: span 3; }
+  .about-skills { grid-template-columns: repeat(4, 1fr); }
 }
 
 @media (max-width: 860px) {
   .bento { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 220px; }
   .bcard-featured { grid-column: span 2; }
   .bcard-name { grid-column: span 2; }
-  .bcard-cta  { grid-column: span 2; }
+  .bcard-uiux { grid-column: span 2; }
+  .bcard-about { grid-column: span 2; }
+  .about-inner { flex-direction: column; gap: 14px; align-items: flex-start; }
+  .about-skills { grid-template-columns: repeat(2, 1fr); gap: 8px 14px; }
+  .other-grid { grid-template-columns: repeat(2, 1fr); }
   .modal {
     align-items: flex-start;
     overflow-y: auto;
@@ -643,10 +819,13 @@ body {
 }
 
 @media (max-width: 520px) {
-  :root { --gap: 8px; --ticker-h: 32px; }
+  :root { --gap: 10px; --ticker-h: 32px; }
   .bento { grid-auto-rows: 180px; }
   .bcard-name { grid-column: span 2; }
-  .bcard-cta  { grid-column: span 2; }
   .ticker-text { font-size: 11px; }
   .name-text { font-size: 28px; }
+  .other-grid { grid-template-columns: 1fr 1fr; }
+  .info-modal { padding: 16px; }
+  .info-dialog.is-other,
+  .info-dialog.is-image { padding: 32px 20px 28px; }
 }

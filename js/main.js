@@ -168,11 +168,12 @@ function closeVideoModal() {
 modalOverlay.addEventListener('click', closeVideoModal);
 modalClose.addEventListener('click', closeVideoModal);
 
-/* ── INFO MODAL (About / Contact) ── */
+/* ── INFO MODAL (About / Contact / Other / Image) ── */
 const infoModal   = document.getElementById('infoModal');
 const infoOverlay = document.getElementById('infoOverlay');
 const infoClose   = document.getElementById('infoClose');
 const infoContent = document.getElementById('infoContent');
+const infoDialog  = document.getElementById('infoDialog');
 
 function openInfoModal(html) {
   infoContent.innerHTML = html;
@@ -181,9 +182,56 @@ function openInfoModal(html) {
   document.body.style.overflow = 'hidden';
 }
 
+function openImageModal(src, title) {
+  infoContent.innerHTML = `
+    <h2 class="info-heading">${title}</h2>
+    <img src="${src}" class="image-modal-img" alt="${title}">
+  `;
+  infoDialog.classList.add('is-image');
+  infoModal.classList.add('is-open');
+  infoModal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function openOtherModal() {
+  const otherVideos = videos.filter((_, i) => !BENTO_VIDEOS.includes(i));
+  const grid = otherVideos.map(v => {
+    const idx = videos.indexOf(v);
+    return `
+      <div class="other-thumb-card" data-index="${idx}">
+        <img src="${v.thumb}" alt="${v.title}" loading="lazy">
+        <div class="other-thumb-overlay"></div>
+        <div class="other-thumb-info">
+          <div class="other-thumb-title">${v.title}</div>
+          <div class="other-thumb-meta">${v.category} · ${v.year}</div>
+        </div>
+        <div class="other-thumb-play"><div class="play-circle"><div class="play-tri"></div></div></div>
+      </div>
+    `;
+  }).join('');
+
+  infoContent.innerHTML = `
+    <h2 class="info-heading">More Work</h2>
+    <div class="other-grid">${grid}</div>
+  `;
+  infoDialog.classList.add('is-other');
+  infoModal.classList.add('is-open');
+  infoModal.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+
+  infoContent.querySelectorAll('.other-thumb-card').forEach(card => {
+    const idx = parseInt(card.dataset.index);
+    card.addEventListener('click', () => {
+      closeInfoModal();
+      openVideoModal(videos[idx]);
+    });
+  });
+}
+
 function closeInfoModal() {
   infoModal.classList.remove('is-open');
   infoModal.setAttribute('aria-hidden', 'true');
+  infoDialog.classList.remove('is-image', 'is-other');
   document.body.style.overflow = '';
 }
 
@@ -197,7 +245,7 @@ document.addEventListener('keydown', e => {
 });
 
 /* ── CARD FACTORIES ── */
-const ALL_LOGOS = ['Houdini', 'Maya', 'Ps', 'Ai', 'FC', 'Nuke', 'Higgs'];
+const ALL_LOGOS = ['Houdini', 'Maya', 'Nuke', 'Higgs', 'Ae', 'Pr', 'FC', 'Ps', 'Ai', 'Figma'];
 
 function createVideoCard(video, featured = false) {
   const card = document.createElement('div');
@@ -326,24 +374,111 @@ function createResumeCard() {
 function createAboutCard() {
   const card = document.createElement('div');
   card.className = 'bcard bcard-about';
-  card.style.cursor = 'pointer';
-  card.innerHTML = '<span class="about-badge">About</span>';
-  card.addEventListener('click', () => {
-    openInfoModal(`
-      <h2 class="info-heading">About</h2>
-      <p class="info-body">Hi, I'm Jaemin Ryu — a VFX artist, filmmaker, and designer.</p>
-      <p class="info-body">I work across visual effects, video production, and design, with a strong focus on translating creative vision into polished, production-ready results. I stay closely attuned to emerging tools and workflows — particularly AI-driven pipelines — and I'm quick to integrate new technology into real projects rather than treating it as an experiment.</p>
-      <p class="info-body">Whether it's a cinematic VFX shot, a branded video, or a design system, I bring both technical precision and a director's eye to every project.</p>
-    `);
-  });
+  card.innerHTML = `
+    <div class="about-inner">
+      <div class="about-left">
+        <span class="about-title">About</span>
+        <p class="about-intro">VFX Artist · Filmmaker · Designer</p>
+      </div>
+      <div class="about-skills">
+        <div class="about-skill-item">
+          <span class="about-skill-cat">VFX &amp; 3D</span>
+          <span class="about-skill-tools">Houdini · Maya · Nuke X</span>
+        </div>
+        <div class="about-skill-item">
+          <span class="about-skill-cat">AI Video Generation</span>
+          <span class="about-skill-tools">Kling · Seedance · Higgsfield</span>
+        </div>
+        <div class="about-skill-item">
+          <span class="about-skill-cat">Video Editing</span>
+          <span class="about-skill-tools">Premiere Pro · Final Cut Pro</span>
+        </div>
+        <div class="about-skill-item">
+          <span class="about-skill-cat">Motion Graphics &amp; Compositing</span>
+          <span class="about-skill-tools">After Effects</span>
+        </div>
+        <div class="about-skill-item">
+          <span class="about-skill-cat">Graphic Design</span>
+          <span class="about-skill-tools">Photoshop · Illustrator</span>
+        </div>
+        <div class="about-skill-item">
+          <span class="about-skill-cat">UI/UX Design</span>
+          <span class="about-skill-tools">Figma</span>
+        </div>
+        <div class="about-skill-item">
+          <span class="about-skill-cat">Development</span>
+          <span class="about-skill-tools">VS Code (Vibe Coding)</span>
+        </div>
+      </div>
+    </div>
+  `;
+  return card;
+}
+
+function createUiuxCard() {
+  const card = document.createElement('div');
+  card.className = 'bcard bcard-video bcard-uiux';
+
+  const img = document.createElement('img');
+  img.className = 'thumb';
+  img.src = 'UiUx/ui001.png';
+  img.alt = 'UI/UX Design';
+  img.loading = 'lazy';
+
+  const grad = document.createElement('div');
+  grad.className = 'vcard-grad';
+
+  const bottom = document.createElement('div');
+  bottom.className = 'vcard-bottom';
+
+  const titleEl = document.createElement('div');
+  titleEl.className = 'vcard-title';
+  titleEl.textContent = 'UI/UX Design';
+
+  const metaEl = document.createElement('div');
+  metaEl.className = 'vcard-meta';
+  metaEl.textContent = 'UI/UX DESIGN · 2025';
+
+  const toolsEl = document.createElement('div');
+  toolsEl.className = 'vcard-tools';
+  const figmaImg = document.createElement('img');
+  figmaImg.src = 'Logo/Figma.png';
+  figmaImg.alt = 'Figma';
+  figmaImg.loading = 'lazy';
+  toolsEl.appendChild(figmaImg);
+
+  bottom.append(titleEl, metaEl, toolsEl);
+
+  const viewWrap = document.createElement('div');
+  viewWrap.className = 'play-wrap';
+  viewWrap.innerHTML = '<div class="play-circle" style="font-size:18px;color:rgba(255,255,255,0.95);">&#128065;</div>';
+
+  card.append(img, grad, bottom, viewWrap);
+  card.addEventListener('click', () => openImageModal('UiUx/ui001.png', 'UI/UX Design'));
+  return card;
+}
+
+function createOtherCard() {
+  const otherCount = videos.filter((_, i) => !BENTO_VIDEOS.includes(i)).length;
+  const card = document.createElement('div');
+  card.className = 'bcard bcard-other';
+  card.innerHTML = `
+    <div class="other-grid-icon">
+      <div class="other-dot"></div><div class="other-dot"></div>
+      <div class="other-dot"></div><div class="other-dot"></div>
+    </div>
+    <span class="other-label">Other</span>
+    <span class="other-count">${otherCount} Videos</span>
+  `;
+  card.addEventListener('click', openOtherModal);
   return card;
 }
 
 /* ── BENTO GRID ── */
-// Layout: 4 cols × 3 rows
 // Row 1: [Spaceship (span 2)] [Tools      ] [Contact   ]
 // Row 2: [Miserable          ] [Jaemin Ryu (span 2)] [Ice Age   ]
-// Row 3: [Resume ] [Thanos  ] [About      ] [Campbell  ]
+// Row 3: [Resume ] [Thanos  ] [Campbell   ] [Other     ]
+// Row 4: [UIUX (span 2)     ] [About (span 2)        ]
 const BENTO_VIDEOS = [0, 6, 4, 5, 7]; // Spaceship, Miserable, Ice Age, Thanos, Campbell
 
 function buildBento() {
@@ -353,7 +488,8 @@ function buildBento() {
   const cells = [
     'video-featured', 'tools',   'contact',
     'video',          'name',    'video',
-    'resume',         'video',   'about',   'video',
+    'resume',         'video',   'video',   'other',
+    'uiux',           'about',
   ];
 
   cells.forEach(type => {
@@ -366,6 +502,8 @@ function buildBento() {
       case 'name':           el = createNameCard();    break;
       case 'resume':         el = createResumeCard();  break;
       case 'about':          el = createAboutCard();   break;
+      case 'uiux':           el = createUiuxCard();    break;
+      case 'other':          el = createOtherCard();   break;
     }
     bento.appendChild(el);
   });
