@@ -108,6 +108,16 @@ Finally, all visual elements were composited and enhanced in NukeX to achieve th
     tools: ['FC'],
     description: 'Planned, filmed, and edited the video.',
   },
+  {
+    thumb: 'UiUx/ui001.png',
+    title: 'UI/UX Design',
+    category: 'UI/UX DESIGN',
+    year: '2025',
+    type: 'image',
+    src: 'UiUx/ui001.png',
+    tools: ['Figma'],
+    description: 'Collaborated with a programmer to develop a game, where I was responsible for the UI/UX design and overall art direction. This image is a design plan created during the current development planning phase of the project.',
+  },
 ];
 
 /* ── VIDEO MODAL ── */
@@ -136,10 +146,15 @@ function openVideoModal(video) {
   (video.tools || []).forEach(t => {
     const img = document.createElement('img');
     img.src = `Logo/${t.trim()}.png`;
-    img.alt = t;
-    img.title = t;
+    img.alt = TOOL_DISPLAY_NAMES[t] || t;
+    img.title = `Filter by ${TOOL_DISPLAY_NAMES[t] || t}`;
     img.loading = 'lazy';
     img.decoding = 'async';
+    img.style.cursor = 'pointer';
+    img.addEventListener('click', () => {
+      closeVideoModal();
+      enterFilterMode(t.trim());
+    });
     modalTools.appendChild(img);
   });
 
@@ -182,11 +197,69 @@ function openInfoModal(html) {
   document.body.style.overflow = 'hidden';
 }
 
-function openImageModal(src, title) {
+function openImageModal(src, title, description) {
+  const descHtml = description
+    ? `<p class="image-modal-desc">${description}</p>`
+    : '';
   infoContent.innerHTML = `
     <h2 class="info-heading">${title}</h2>
-    <img src="${src}" class="image-modal-img" alt="${title}">
+    ${descHtml}
+    <div class="image-zoom-controls">
+      <span class="zoom-toggle-label">Zoom</span>
+      <button class="zoom-toggle is-on" aria-label="Toggle zoom lens"></button>
+    </div>
+    <div class="image-zoom-wrap">
+      <img src="${src}" class="image-modal-img" alt="${title}">
+      <div class="image-zoom-lens"></div>
+      <div class="image-zoom-hint">Hover to zoom</div>
+    </div>
   `;
+
+  const wrap    = infoContent.querySelector('.image-zoom-wrap');
+  const img     = infoContent.querySelector('.image-modal-img');
+  const lens    = infoContent.querySelector('.image-zoom-lens');
+  const hint    = infoContent.querySelector('.image-zoom-hint');
+  const toggleBtn = infoContent.querySelector('.zoom-toggle');
+  const ZOOM  = 3;
+  const LSIZE = 420;
+  let zoomEnabled = true;
+
+  toggleBtn.addEventListener('click', () => {
+    zoomEnabled = !zoomEnabled;
+    toggleBtn.classList.toggle('is-on', zoomEnabled);
+    if (!zoomEnabled) {
+      lens.style.opacity = '0';
+      hint.style.opacity = '0';
+      wrap.style.cursor = 'default';
+    } else {
+      hint.style.opacity = '1';
+      wrap.style.cursor = 'crosshair';
+    }
+  });
+
+  wrap.addEventListener('mousemove', e => {
+    if (!zoomEnabled) return;
+    const r  = img.getBoundingClientRect();
+    const cx = e.clientX - r.left;
+    const cy = e.clientY - r.top;
+    if (cx < 0 || cy < 0 || cx > r.width || cy > r.height) {
+      lens.style.opacity = '0';
+      return;
+    }
+    lens.style.left               = `${cx - LSIZE / 2}px`;
+    lens.style.top                = `${cy - LSIZE / 2}px`;
+    lens.style.backgroundImage    = `url('${src}')`;
+    lens.style.backgroundSize     = `${r.width * ZOOM}px ${r.height * ZOOM}px`;
+    lens.style.backgroundPosition = `${-(cx * ZOOM - LSIZE / 2)}px ${-(cy * ZOOM - LSIZE / 2)}px`;
+    lens.style.opacity = '1';
+    hint.style.opacity = '0';
+  });
+
+  wrap.addEventListener('mouseleave', () => {
+    lens.style.opacity = '0';
+    if (zoomEnabled) hint.style.opacity = '1';
+  });
+
   infoDialog.classList.add('is-image');
   infoModal.classList.add('is-open');
   infoModal.setAttribute('aria-hidden', 'false');
@@ -194,9 +267,12 @@ function openImageModal(src, title) {
 }
 
 function openOtherModal() {
-  const otherVideos = videos.filter((_, i) => !BENTO_VIDEOS.includes(i));
+  const otherVideos = videos.filter((v, i) => !BENTO_VIDEOS.includes(i) && v.type !== 'image');
   const grid = otherVideos.map(v => {
     const idx = videos.indexOf(v);
+    const toolIcons = (v.tools || []).map(t =>
+      `<img src="Logo/${t.trim()}.png" alt="${t}" title="${t}" loading="lazy">`
+    ).join('');
     return `
       <div class="other-thumb-card" data-index="${idx}">
         <img src="${v.thumb}" alt="${v.title}" loading="lazy">
@@ -204,6 +280,7 @@ function openOtherModal() {
         <div class="other-thumb-info">
           <div class="other-thumb-title">${v.title}</div>
           <div class="other-thumb-meta">${v.category} · ${v.year}</div>
+          <div class="other-thumb-tools">${toolIcons}</div>
         </div>
         <div class="other-thumb-play"><div class="play-circle"><div class="play-tri"></div></div></div>
       </div>
@@ -223,7 +300,12 @@ function openOtherModal() {
     const idx = parseInt(card.dataset.index);
     card.addEventListener('click', () => {
       closeInfoModal();
-      openVideoModal(videos[idx]);
+      const v = videos[idx];
+      if (v.type === 'image') {
+        openImageModal(v.src || v.thumb, v.title, v.description);
+      } else {
+        openVideoModal(v);
+      }
     });
   });
 }
@@ -246,6 +328,19 @@ document.addEventListener('keydown', e => {
 
 /* ── CARD FACTORIES ── */
 const ALL_LOGOS = ['Houdini', 'Maya', 'Nuke', 'Higgs', 'Ae', 'Pr', 'FC', 'Ps', 'Ai', 'Figma'];
+
+const TOOL_DISPLAY_NAMES = {
+  Houdini: 'Houdini',
+  Maya: 'Maya',
+  Nuke: 'Nuke X',
+  Higgs: 'Higgsfield',
+  Ae: 'After Effects',
+  Pr: 'Premiere Pro',
+  FC: 'Final Cut Pro',
+  Ps: 'Photoshop',
+  Ai: 'Illustrator',
+  Figma: 'Figma',
+};
 
 function createVideoCard(video, featured = false) {
   const card = document.createElement('div');
@@ -285,10 +380,18 @@ function createVideoCard(video, featured = false) {
 
   const playWrap = document.createElement('div');
   playWrap.className = 'play-wrap';
-  playWrap.innerHTML = '<div class="play-circle"><div class="play-tri"></div></div>';
+  if (video.type === 'image') {
+    playWrap.innerHTML = '<div class="play-circle" style="font-size:18px;color:rgba(255,255,255,0.95);">&#128065;</div>';
+  } else {
+    playWrap.innerHTML = '<div class="play-circle"><div class="play-tri"></div></div>';
+  }
 
   card.append(img, grad, bottom, playWrap);
-  card.addEventListener('click', () => openVideoModal(video));
+  if (video.type === 'image') {
+    card.addEventListener('click', () => openImageModal(video.src || video.thumb, video.title, video.description));
+  } else {
+    card.addEventListener('click', () => openVideoModal(video));
+  }
   return card;
 }
 
@@ -300,6 +403,10 @@ function createToolsCard() {
   label.className = 'tools-label';
   label.textContent = 'Tools';
 
+  const desc = document.createElement('span');
+  desc.className = 'tools-desc';
+  desc.textContent = 'Click an icon to see all works made with that tool';
+
   const logos = document.createElement('div');
   logos.className = 'tools-logos';
   ALL_LOGOS.forEach(name => {
@@ -308,10 +415,15 @@ function createToolsCard() {
     img.alt = name;
     img.title = name;
     img.loading = 'lazy';
+    img.dataset.tool = name;
+    img.addEventListener('click', e => {
+      e.stopPropagation();
+      enterFilterMode(name);
+    });
     logos.appendChild(img);
   });
 
-  card.append(label, logos);
+  card.append(label, desc, logos);
   return card;
 }
 
@@ -338,6 +450,10 @@ function createContactCard() {
         <div>
           <div class="contact-row-label">Phone</div>
           <a class="contact-row-val" href="tel:+12369718044">+1 236 971 8044</a>
+        </div>
+        <div>
+          <div class="contact-row-label">LinkedIn</div>
+          <a class="contact-row-val" href="https://www.linkedin.com/in/jaemin-ryu/" target="_blank" rel="noopener">linkedin.com/in/jaemin-ryu</a>
         </div>
       </div>
     `);
@@ -454,12 +570,17 @@ function createUiuxCard() {
   viewWrap.innerHTML = '<div class="play-circle" style="font-size:18px;color:rgba(255,255,255,0.95);">&#128065;</div>';
 
   card.append(img, grad, bottom, viewWrap);
-  card.addEventListener('click', () => openImageModal('UiUx/ui001.png', 'UI/UX Design'));
+
+  card.addEventListener('click', () => openImageModal(
+    'UiUx/ui001.png',
+    'UI/UX Design',
+    'Collaborated with a programmer to develop a game, where I was responsible for the UI/UX design and overall art direction. This image is a design plan created during the current development planning phase of the project.'
+  ));
   return card;
 }
 
 function createOtherCard() {
-  const otherCount = videos.filter((_, i) => !BENTO_VIDEOS.includes(i)).length;
+  const otherCount = videos.filter((v, i) => !BENTO_VIDEOS.includes(i) && v.type !== 'image').length;
   const card = document.createElement('div');
   card.className = 'bcard bcard-other';
   card.innerHTML = `
@@ -510,3 +631,103 @@ function buildBento() {
 }
 
 buildBento();
+
+/* ── FILTER MODE ── */
+let filterActive = false;
+
+function enterFilterMode(toolName) {
+  if (filterActive) return;
+  filterActive = true;
+
+  const bento = document.getElementById('bento');
+  const cards = [...bento.children];
+  const totalDelay = (cards.length - 1) * 35 + 400;
+
+  cards.forEach((card, i) => {
+    card.style.setProperty('--stagger', `${i * 35}ms`);
+    card.classList.add('card-exit');
+  });
+
+  setTimeout(() => {
+    bento.style.display = 'none';
+    showFilteredView(toolName);
+  }, totalDelay);
+}
+
+function showFilteredView(toolName) {
+  const matching = videos.filter(v => v.tools && v.tools.includes(toolName));
+  const filteredView = document.getElementById('filteredView');
+
+  // Header
+  const header = document.createElement('div');
+  header.className = 'filtered-header';
+
+  const backBtn = document.createElement('button');
+  backBtn.className = 'filter-back-btn';
+  backBtn.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Back`;
+  backBtn.addEventListener('click', exitFilterMode);
+
+  const toolInfo = document.createElement('div');
+  toolInfo.className = 'filtered-tool-info';
+
+  const toolImg = document.createElement('img');
+  toolImg.src = `Logo/${toolName}.png`;
+  toolImg.alt = toolName;
+
+  const toolText = document.createElement('span');
+  toolText.textContent = TOOL_DISPLAY_NAMES[toolName] || toolName;
+
+  const toolCount = document.createElement('span');
+  toolCount.className = 'filtered-tool-count';
+  toolCount.textContent = `${matching.length} work${matching.length !== 1 ? 's' : ''}`;
+
+  toolInfo.append(toolImg, toolText, toolCount);
+  header.append(backBtn, toolInfo);
+
+  // Grid
+  const grid = document.createElement('div');
+  grid.className = 'filtered-grid';
+
+  if (matching.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'filtered-empty';
+    empty.textContent = 'Projects using this tool are actively in progress and will be showcased here soon.';
+    grid.appendChild(empty);
+  } else {
+    matching.forEach((video, i) => {
+      const card = createVideoCard(video, false);
+      card.classList.add('filtered-grid-card');
+      card.style.setProperty('--stagger', `${i * 60}ms`);
+      grid.appendChild(card);
+    });
+  }
+
+  filteredView.replaceChildren(header, grid);
+  filteredView.classList.add('is-active');
+}
+
+function exitFilterMode() {
+  const filteredView = document.getElementById('filteredView');
+  const bento = document.getElementById('bento');
+  const cards = [...bento.children];
+
+  filteredView.classList.remove('is-active');
+
+  // Prepare cards for enter animation before showing bento
+  cards.forEach((card, i) => {
+    card.classList.remove('card-exit');
+    card.style.setProperty('--stagger', `${i * 35}ms`);
+    card.classList.add('card-enter');
+  });
+
+  bento.style.display = '';
+
+  const totalDelay = (cards.length - 1) * 35 + 500;
+  setTimeout(() => {
+    cards.forEach(card => {
+      card.classList.remove('card-enter');
+      card.style.removeProperty('--stagger');
+    });
+    filterActive = false;
+  }, totalDelay);
+}
