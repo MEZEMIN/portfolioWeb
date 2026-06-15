@@ -595,6 +595,66 @@ function createOtherCard() {
   return card;
 }
 
+/* ── SELF-HOSTED VIDEO CARD ── */
+function createSelfVideoCard() {
+  const card = document.createElement('div');
+  card.className = 'bcard bcard-selfvideo';
+
+  const video = document.createElement('video');
+  video.className = 'selfvideo-video';
+  video.src = 'Video/DNAF2026_v2.mp4';
+  video.autoplay = true;
+  video.muted = true;
+  video.loop = true;
+  video.playsInline = true;
+
+  const grad = document.createElement('div');
+  grad.className = 'vcard-grad selfvideo-overlay';
+
+  const bottom = document.createElement('div');
+  bottom.className = 'vcard-bottom selfvideo-info';
+
+  const titleEl = document.createElement('div');
+  titleEl.className = 'vcard-title';
+  titleEl.textContent = '운룡도 [Unryongdo]';
+
+  const metaEl = document.createElement('div');
+  metaEl.className = 'vcard-meta';
+  metaEl.textContent = 'AI + VFX(Compositing) ART WORK';
+
+  const toolsEl = document.createElement('div');
+  toolsEl.className = 'vcard-tools';
+  ['Nuke', 'Higgs', 'FC'].forEach(t => {
+    const tImg = document.createElement('img');
+    tImg.src = `Logo/${t.trim()}.png`;
+    tImg.alt = TOOL_DISPLAY_NAMES[t] || t;
+    tImg.loading = 'lazy';
+    toolsEl.appendChild(tImg);
+  });
+
+  bottom.append(titleEl, metaEl, toolsEl);
+
+  const fsBtn = document.createElement('button');
+  fsBtn.className = 'selfvideo-fs-btn';
+  fsBtn.setAttribute('aria-label', 'View fullscreen');
+  fsBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8 3H5a2 2 0 0 0-2 2v3"/>
+    <path d="M21 8V5a2 2 0 0 0-2-2h-3"/>
+    <path d="M3 16v3a2 2 0 0 0 2 2h3"/>
+    <path d="M16 21h3a2 2 0 0 0 2-2v-3"/>
+  </svg>`;
+  fsBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    const el = video;
+    if (el.requestFullscreen) el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
+  });
+
+  card.append(video, grad, bottom, fsBtn);
+  return card;
+}
+
 /* ── BENTO GRID ── */
 // Row 1: [Spaceship (span 2)] [Tools      ] [Contact   ]
 // Row 2: [Miserable          ] [Jaemin Ryu (span 2)] [Ice Age   ]
@@ -604,8 +664,12 @@ const BENTO_VIDEOS = [0, 6, 4, 5, 7]; // Spaceship, Miserable, Ice Age, Thanos, 
 
 function buildBento() {
   const bento = document.getElementById('bento');
-  let vi = 0;
 
+  // Self-video card sits above the bento grid, outside it
+  const selfCard = createSelfVideoCard();
+  bento.parentNode.insertBefore(selfCard, bento);
+
+  let vi = 0;
   const cells = [
     'video-featured', 'tools',   'contact',
     'video',          'name',    'video',
