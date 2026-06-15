@@ -1,7 +1,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:       #0d0d0d;
+  --bg:       #F4EDE4;
   --radius:   20px;
   --gap:      20px;
   --font:     'Bricolage Grotesque', system-ui, sans-serif;
@@ -237,7 +237,7 @@ body {
 
 /* ── TOOLS CARD ── */
 .bcard-tools {
-  background: #fff;
+  background: #E2D5C5;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -249,7 +249,7 @@ body {
 .tools-label {
   font-size: 28px;
   font-weight: 800;
-  color: #111;
+  color: #2C2118;
   letter-spacing: -0.03em;
   line-height: 1;
 }
@@ -257,7 +257,7 @@ body {
 .tools-desc {
   font-size: 11px;
   font-weight: 500;
-  color: #888;
+  color: #7A6E62;
   text-align: center;
   max-width: 210px;
   line-height: 1.5;
@@ -289,7 +289,7 @@ body {
 
 /* ── CONTACT CARD ── */
 .bcard-contact {
-  background: linear-gradient(145deg, #54C0FF 0%, #1A73E8 55%, #0D47A1 100%);
+  background: linear-gradient(145deg, #7A4230 0%, #A85C42 55%, #BD7055 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -321,21 +321,11 @@ body {
 /* ── NAME CARD ── */
 .bcard-name {
   grid-column: span 2;
-  background-image: url('../CardDesign/Rectangle001.png');
-  background-size: cover;
-  background-position: center;
+  background: linear-gradient(145deg, #1C1510 0%, #2E2018 55%, #3D2C22 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-}
-
-.bcard-name::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.18);
-  pointer-events: none;
 }
 
 .name-text {
@@ -343,16 +333,16 @@ body {
   z-index: 1;
   font-size: clamp(34px, 3.8vw, 58px);
   font-weight: 800;
-  color: rgba(255,255,255,0.92);
+  color: rgba(244, 237, 228, 0.92);
   letter-spacing: -0.03em;
   text-align: center;
-  text-shadow: 0 2px 24px rgba(0,0,0,0.55), 0 1px 6px rgba(0,0,0,0.4);
+  text-shadow: 0 2px 24px rgba(0,0,0,0.4), 0 1px 6px rgba(0,0,0,0.25);
   user-select: none;
 }
 
 /* ── RESUME CARD ── */
 .bcard-resume {
-  background: #ffffff;
+  background: #D8C9B5;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -365,13 +355,13 @@ body {
 .resume-label {
   font-size: 20px;
   font-weight: 800;
-  color: #111;
+  color: #2C2118;
 }
 
 /* ── ABOUT CARD ── */
 .bcard-about {
   grid-column: span 2;
-  background: linear-gradient(155deg, #1B5E20 0%, #2E7D32 45%, #388E3C 100%);
+  background: linear-gradient(155deg, #2E2E1A 0%, #424030 45%, #565448 100%);
   padding: 26px 30px;
   cursor: default;
 }
@@ -439,7 +429,7 @@ body {
 
 /* ── OTHER CARD ── */
 .bcard-other {
-  background: linear-gradient(145deg, #1a1a2e 0%, #16213e 55%, #0f3460 100%);
+  background: linear-gradient(145deg, #1E1418 0%, #2C1E28 55%, #201420 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -505,12 +495,12 @@ body {
   border-radius: var(--radius);
   color: #fff;
   background:
-    linear-gradient(145deg, rgba(255,255,255,0.16), rgba(255,255,255,0.05) 46%, rgba(255,255,255,0.10)),
-    rgba(28, 20, 40, 0.65);
-  border: 1px solid rgba(255,255,255,0.16);
+    linear-gradient(145deg, rgba(255,235,210,0.14), rgba(255,235,210,0.04) 46%, rgba(255,235,210,0.08)),
+    rgba(22, 14, 10, 0.82);
+  border: 1px solid rgba(255,225,195,0.15);
   box-shadow:
     0 24px 60px rgba(0,0,0,0.55),
-    inset 0 1px 0 rgba(255,255,255,0.22);
+    inset 0 1px 0 rgba(255,225,195,0.20);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   transform: scale(0.93) translateY(12px);
@@ -852,12 +842,12 @@ body {
   color: #fff;
   text-align: center;
   background:
-    linear-gradient(145deg, rgba(255,255,255,0.16), rgba(255,255,255,0.05) 46%, rgba(255,255,255,0.10)),
-    rgba(30, 22, 42, 0.60);
-  border: 1px solid rgba(255,255,255,0.16);
+    linear-gradient(145deg, rgba(255,235,210,0.14), rgba(255,235,210,0.04) 46%, rgba(255,235,210,0.08)),
+    rgba(22, 14, 10, 0.82);
+  border: 1px solid rgba(255,225,195,0.15);
   box-shadow:
     0 24px 60px rgba(0,0,0,0.5),
-    inset 0 1px 0 rgba(255,255,255,0.22);
+    inset 0 1px 0 rgba(255,225,195,0.20);
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
 }
@@ -867,7 +857,7 @@ body {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(circle at 18% 12%, rgba(255,255,255,0.14), transparent 34%);
+  background: radial-gradient(circle at 18% 12%, rgba(255,210,170,0.18), transparent 34%);
 }
 
 .video-info-panel h3,
@@ -953,9 +943,9 @@ body {
   display: flex;
   align-items: center;
   gap: 7px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.18);
-  color: rgba(255,255,255,0.80);
+  background: rgba(44,33,24,0.08);
+  border: 1px solid rgba(44,33,24,0.18);
+  color: rgba(44,33,24,0.80);
   font-family: var(--font);
   font-size: 13px;
   font-weight: 600;
@@ -968,9 +958,9 @@ body {
   flex-shrink: 0;
 }
 .filter-back-btn:hover {
-  background: rgba(255,255,255,0.16);
-  color: #fff;
-  border-color: rgba(255,255,255,0.3);
+  background: rgba(44,33,24,0.15);
+  color: #2C2118;
+  border-color: rgba(44,33,24,0.30);
 }
 
 .filtered-tool-info {
@@ -986,13 +976,13 @@ body {
 .filtered-tool-info span {
   font-size: 18px;
   font-weight: 700;
-  color: #fff;
+  color: #2C2118;
   letter-spacing: -0.02em;
 }
 .filtered-tool-count {
   font-size: 11px;
   font-weight: 500;
-  color: rgba(255,255,255,0.45);
+  color: rgba(44,33,24,0.45);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -1015,7 +1005,7 @@ body {
 
 .filtered-empty {
   grid-column: 1 / -1;
-  color: rgba(255,255,255,0.35);
+  color: rgba(44,33,24,0.35);
   font-size: 15px;
   font-weight: 500;
   padding: 60px 0;
