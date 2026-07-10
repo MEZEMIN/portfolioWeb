@@ -118,6 +118,15 @@ Finally, all visual elements were composited and enhanced in NukeX to achieve th
     tools: ['Figma'],
     description: 'Collaborated with a programmer to develop a game, where I was responsible for the UI/UX design and overall art direction. This image is a design plan created during the current development planning phase of the project.',
   },
+  {
+    thumb: 'Thumnail/012.png',
+    title: 'Mare Infinitum',
+    category: 'AI ART WORK',
+    year: '2026',
+    type: 'youtube', id: '1LM7vSTLtmY',
+    tools: ['Higgs', 'FC'],
+    description: 'Created an AI-driven art video, Mare Infinitum, produced with Higgsfield and edited in Final Cut Pro.',
+  },
 ];
 
 /* ── VIDEO MODAL ── */
@@ -655,25 +664,65 @@ function createSelfVideoCard() {
   return card;
 }
 
+/* ── PROMO OVERLAY (NEW badge + workflow breakdown CTA) ── */
+function createPromoOverlay() {
+  const wrap = document.createElement('div');
+  wrap.className = 'promo-overlay';
+  wrap.innerHTML = `
+    <span class="promo-badge">NEW</span>
+    <div class="promo-bubble">
+      <span>Check out the Video Workflow Breakdown here &rarr;</span>
+      <a class="promo-click-btn" href="https://www.youtube.com/watch?v=oWY_7OpGzA4" target="_blank" rel="noopener">CLICK ME</a>
+    </div>
+  `;
+  return wrap;
+}
+
+/* ── SHORTCUT SIDEBAR (AI / VFX / Design category filters) ── */
+function createShortcutColumn() {
+  const wrap = document.createElement('div');
+  wrap.className = 'shortcut-col';
+  wrap.innerHTML = `
+    <span class="shortcut-label">Shortcut</span>
+    <button class="shortcut-btn shortcut-ai" type="button">AI</button>
+    <button class="shortcut-btn shortcut-vfx" type="button">VFX</button>
+    <button class="shortcut-btn shortcut-design" type="button">Design</button>
+  `;
+  wrap.querySelector('.shortcut-ai').addEventListener('click', () => enterFilterMode('AI'));
+  wrap.querySelector('.shortcut-vfx').addEventListener('click', () => enterFilterMode('VFX'));
+  wrap.querySelector('.shortcut-design').addEventListener('click', () => enterFilterMode('Design'));
+  return wrap;
+}
+
+function createHeroRow() {
+  const row = document.createElement('div');
+  row.className = 'hero-row';
+
+  const selfCard = createSelfVideoCard();
+  selfCard.appendChild(createPromoOverlay());
+
+  row.append(selfCard, createShortcutColumn());
+  return row;
+}
+
 /* ── BENTO GRID ── */
-// Row 1: [Spaceship (span 2)] [Tools      ] [Contact   ]
+// Row 1: [Spaceship (span 2)] [Tools      ] [Mare Infinitum]
 // Row 2: [Miserable          ] [Jaemin Ryu (span 2)] [Ice Age   ]
-// Row 3: [Resume ] [Thanos  ] [Campbell   ] [Other     ]
+// Row 3: [Resume ] [Thanos  ] [Contact    ] [Other     ]
 // Row 4: [UIUX (span 2)     ] [About (span 2)        ]
-const BENTO_VIDEOS = [0, 6, 4, 5, 7]; // Spaceship, Miserable, Ice Age, Thanos, Campbell
+const BENTO_VIDEOS = [0, 12, 6, 4, 5]; // Spaceship, Mare Infinitum, Miserable, Ice Age, Thanos
 
 function buildBento() {
   const bento = document.getElementById('bento');
 
-  // Self-video card sits above the bento grid, outside it
-  const selfCard = createSelfVideoCard();
-  bento.parentNode.insertBefore(selfCard, bento);
+  // Hero row (self-video + shortcut sidebar) sits above the bento grid, outside it
+  bento.parentNode.insertBefore(createHeroRow(), bento);
 
   let vi = 0;
   const cells = [
-    'video-featured', 'tools',   'contact',
+    'video-featured', 'tools',   'video',
     'video',          'name',    'video',
-    'resume',         'video',   'video',   'other',
+    'resume',         'video',   'contact', 'other',
     'uiux',           'about',
   ];
 
@@ -699,6 +748,24 @@ buildBento();
 /* ── FILTER MODE ── */
 let filterActive = false;
 
+const CATEGORY_FILTERS = {
+  AI: {
+    label: 'AI',
+    icons: ['Higgs'],
+    predicate: v => v.tools && v.tools.includes('Higgs'),
+  },
+  VFX: {
+    label: 'VFX',
+    icons: ['Houdini', 'Maya', 'Nuke'],
+    predicate: v => v.tools && v.tools.some(t => ['Houdini', 'Maya', 'Nuke'].includes(t)),
+  },
+  Design: {
+    label: 'Design',
+    icons: ['Ps', 'Ai', 'Figma'],
+    predicate: v => !(v.tools && v.tools.some(t => ['Higgs', 'Houdini', 'Maya', 'Nuke'].includes(t))),
+  },
+};
+
 function enterFilterMode(toolName) {
   if (filterActive) return;
   filterActive = true;
@@ -718,8 +785,11 @@ function enterFilterMode(toolName) {
   }, totalDelay);
 }
 
-function showFilteredView(toolName) {
-  const matching = videos.filter(v => v.tools && v.tools.includes(toolName));
+function showFilteredView(filterKey) {
+  const category = CATEGORY_FILTERS[filterKey];
+  const matching = category
+    ? videos.filter(category.predicate)
+    : videos.filter(v => v.tools && v.tools.includes(filterKey));
   const filteredView = document.getElementById('filteredView');
 
   // Header
@@ -734,18 +804,22 @@ function showFilteredView(toolName) {
   const toolInfo = document.createElement('div');
   toolInfo.className = 'filtered-tool-info';
 
-  const toolImg = document.createElement('img');
-  toolImg.src = `Logo/${toolName}.png`;
-  toolImg.alt = toolName;
+  (category ? category.icons : [filterKey]).forEach(name => {
+    const toolImg = document.createElement('img');
+    toolImg.src = `Logo/${name}.png`;
+    toolImg.alt = name;
+    toolInfo.appendChild(toolImg);
+  });
 
   const toolText = document.createElement('span');
-  toolText.textContent = TOOL_DISPLAY_NAMES[toolName] || toolName;
+  toolText.textContent = category ? category.label : (TOOL_DISPLAY_NAMES[filterKey] || filterKey);
+  toolInfo.appendChild(toolText);
 
   const toolCount = document.createElement('span');
   toolCount.className = 'filtered-tool-count';
   toolCount.textContent = `${matching.length} work${matching.length !== 1 ? 's' : ''}`;
+  toolInfo.appendChild(toolCount);
 
-  toolInfo.append(toolImg, toolText, toolCount);
   header.append(backBtn, toolInfo);
 
   // Grid
