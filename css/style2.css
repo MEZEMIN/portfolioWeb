@@ -334,6 +334,55 @@ a:focus-visible {
   filter: saturate(.82) contrast(1.08);
 }
 
+/* ── OPTIONAL CARD DEPTH (enabled by main2.js on pointer devices) ── */
+.has-card-depth .work-index {
+  perspective: 1400px;
+}
+
+.has-card-depth .project-card {
+  --card-tilt-x: 0deg;
+  --card-tilt-y: 0deg;
+  --shine-x: 50%;
+  --shine-y: 50%;
+  transform: perspective(850px) rotateX(var(--card-tilt-x)) rotateY(var(--card-tilt-y));
+  transform-style: preserve-3d;
+  transition: transform 180ms ease, filter 180ms ease;
+  will-change: transform;
+}
+
+.has-card-depth .project-card:hover,
+.has-card-depth .project-card:focus-visible {
+  z-index: 5;
+  filter: drop-shadow(0 14px 20px rgba(0, 0, 0, .62));
+}
+
+.has-card-depth .project-card .card-info,
+.has-card-depth .project-card .card-index {
+  z-index: 4;
+  transform: translateZ(22px);
+}
+
+.has-card-depth .project-card::before {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at var(--shine-x) var(--shine-y),
+    rgba(255, 255, 255, .24),
+    transparent 31%
+  );
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.has-card-depth .project-card:hover::before,
+.has-card-depth .project-card:focus-visible::before {
+  opacity: .76;
+}
+
 .empty-message {
   display: none;
   align-items: center;
@@ -546,6 +595,10 @@ dialog::backdrop {
 }
 
 @media (hover: none) {
+  .has-card-depth .project-card {
+    transform: none;
+  }
+
   .project-card::after {
     opacity: .7;
   }

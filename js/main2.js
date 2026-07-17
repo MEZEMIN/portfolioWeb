@@ -408,6 +408,34 @@ function closeOnBackdrop(event) {
   if (event.target === event.currentTarget) event.currentTarget.close();
 }
 
+function enableCardDepth() {
+  if (document.body.classList.contains('experience-3d')) return;
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+  document.body.classList.add('has-card-depth');
+
+  document.querySelectorAll('.project-card').forEach(card => {
+    card.addEventListener('pointermove', event => {
+      const bounds = card.getBoundingClientRect();
+      const x = (event.clientX - bounds.left) / bounds.width;
+      const y = (event.clientY - bounds.top) / bounds.height;
+
+      card.style.setProperty('--card-tilt-y', `${(x - .5) * 8}deg`);
+      card.style.setProperty('--card-tilt-x', `${(.5 - y) * 7}deg`);
+      card.style.setProperty('--shine-x', `${x * 100}%`);
+      card.style.setProperty('--shine-y', `${y * 100}%`);
+    });
+
+    card.addEventListener('pointerleave', () => {
+      card.style.setProperty('--card-tilt-x', '0deg');
+      card.style.setProperty('--card-tilt-y', '0deg');
+      card.style.setProperty('--shine-x', '50%');
+      card.style.setProperty('--shine-y', '50%');
+    });
+  });
+}
+
 document.getElementById('projectModalClose').addEventListener('click', closeProject);
 projectModal.addEventListener('click', closeOnBackdrop);
 projectModal.addEventListener('close', () => {
@@ -421,3 +449,4 @@ contactModal.addEventListener('click', closeOnBackdrop);
 
 buildToolFilters();
 buildWorkIndex();
+enableCardDepth();
