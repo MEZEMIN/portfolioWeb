@@ -3,55 +3,66 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jaemin Ryu — Portfolio</title>
+  <meta name="description" content="Jaemin Ryu — VFX artist, filmmaker, and designer." />
+  <title>Jaemin Ryu — Selected Work</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style2.css" />
 </head>
 <body>
+  <div class="portfolio-shell">
+    <header class="site-header">
+      <div class="identity-row">
+        <a class="wordmark" href="index2.html" aria-label="Jaemin Ryu, home">[JAEMIN RYU]</a>
+        <nav class="primary-nav" aria-label="Primary navigation">
+          <button class="nav-link" id="contactButton" type="button">contact</button>
+          <span aria-hidden="true">|</span>
+          <a class="nav-link" href="Resum_FX.pdf" target="_blank" rel="noopener">resume</a>
+          <span aria-hidden="true">|</span>
+          <a class="nav-link" href="https://www.youtube.com/@zeminismstudio/videos" target="_blank" rel="noopener">youtube</a>
+        </nav>
+      </div>
 
-  <!-- Ticker -->
-  <div class="ticker-wrap" aria-label="Introduction">
-    <div class="ticker-inner">
-      <span class="ticker-text">Hi, I'm Jaemin Ryu — a VFX artist, filmmaker, and designer. I work across visual effects, video production, and design, with a strong focus on translating creative vision into polished, production-ready results. I stay closely attuned to emerging tools and workflows — particularly AI-driven pipelines — and I'm quick to integrate new technology into real projects rather than treating it as an experiment. &nbsp;&nbsp;&nbsp;✦&nbsp;&nbsp;&nbsp;</span>
-      <span class="ticker-text" aria-hidden="true">Hi, I'm Jaemin Ryu — a VFX artist, filmmaker, and designer. I work across visual effects, video production, and design, with a strong focus on translating creative vision into polished, production-ready results. I stay closely attuned to emerging tools and workflows — particularly AI-driven pipelines — and I'm quick to integrate new technology into real projects rather than treating it as an experiment. &nbsp;&nbsp;&nbsp;✦&nbsp;&nbsp;&nbsp;</span>
-    </div>
+      <div class="tool-filter" aria-label="Filter projects by tool">
+        <span class="tool-filter-label">tools</span>
+        <div class="tool-filter-grid" id="toolFilters"></div>
+        <p class="filter-status" id="filterStatus" aria-live="polite"></p>
+      </div>
+    </header>
+
+    <main class="work-index" id="workIndex"></main>
+
+    <footer class="site-footer">
+      <span>VFX · FILM · DESIGN</span>
+      <span>JAEMIN RYU © 2026</span>
+    </footer>
   </div>
 
-  <!-- Bento Grid -->
-  <main class="bento" id="bento"></main>
-
-  <!-- Filtered View (tool filter mode) -->
-  <div id="filteredView"></div>
-
-  <!-- Video Modal -->
-  <div class="modal" id="videoModal" aria-hidden="true">
-    <div class="modal-overlay" id="modalOverlay"></div>
-    <div class="modal-dialog" id="modalDialog">
-      <button class="modal-close" id="modalClose" aria-label="Close">&#x2715;</button>
-      <div class="modal-content">
-        <div class="video-aspect-box">
-          <div class="video-inner" id="videoInner"></div>
-        </div>
-        <aside class="video-info-panel">
-          <h3 id="modalTitle"></h3>
-          <p id="modalDescription"></p>
-          <div class="modal-tool-row" id="modalTools"></div>
-        </aside>
+  <dialog class="project-modal" id="projectModal" aria-labelledby="projectModalTitle">
+    <button class="modal-close" id="projectModalClose" type="button" aria-label="Close project">×</button>
+    <div class="project-modal-layout">
+      <div class="project-media" id="projectMedia"></div>
+      <div class="project-copy">
+        <p class="project-kicker" id="projectModalKicker"></p>
+        <h2 id="projectModalTitle"></h2>
+        <p class="project-description" id="projectModalDescription"></p>
+        <div class="project-tools" id="projectModalTools"></div>
       </div>
     </div>
-  </div>
+  </dialog>
 
-  <!-- Info Modal (About / Contact) -->
-  <div class="info-modal" id="infoModal" aria-hidden="true">
-    <div class="info-overlay" id="infoOverlay"></div>
-    <div class="info-dialog" id="infoDialog">
-      <button class="info-close" id="infoClose" aria-label="Close">&#x2715;</button>
-      <div id="infoContent"></div>
+  <dialog class="contact-modal" id="contactModal" aria-labelledby="contactModalTitle">
+    <button class="modal-close" id="contactModalClose" type="button" aria-label="Close contact information">×</button>
+    <p class="project-kicker">AVAILABLE FOR COLLABORATION</p>
+    <h2 id="contactModalTitle">contact</h2>
+    <div class="contact-list">
+      <a href="mailto:zemin2k@gmail.com"><span>email</span>zemin2k@gmail.com</a>
+      <a href="tel:+12369718044"><span>phone</span>+1 236 971 8044</a>
+      <a href="https://www.linkedin.com/in/jaemin-ryu/" target="_blank" rel="noopener"><span>linkedin</span>jaemin-ryu</a>
     </div>
-  </div>
+  </dialog>
 
-  <script src="js/main.js"></script>
+  <script src="js/main2.js"></script>
 </body>
 </html>
