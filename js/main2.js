@@ -57,9 +57,10 @@ const projects = [
     category: 'AI + VFX Artwork',
     year: '2026',
     group: 'vfx',
-    type: 'self',
-    src: 'Video/DNAF2026_v2.mp4',
+    type: 'youtube',
+    id: 'oWY_7OpGzA4',
     tools: ['Nuke', 'Higgs', 'FC'],
+    badge: 'Latest',
     description: 'An AI-driven moving image developed through a hybrid generation, compositing, and editorial workflow.',
   },
   {
@@ -122,7 +123,22 @@ const projects = [
     type: 'youtube',
     id: '1LM7vSTLtmY',
     tools: ['Higgs', 'FC'],
+    badge: 'Latest',
     description: 'An AI-driven art video produced with Higgsfield and edited in Final Cut Pro.',
+  },
+  {
+    slug: 'domo-lemn-matcha',
+    thumb: 'Thumnail/014.png',
+    title: 'DOMO LEMN Matcha',
+    category: 'AI Commercial Video',
+    year: '2026',
+    group: 'ai',
+    type: 'youtube',
+    id: 'YFORY9FSFIU',
+    aspect: 'portrait',
+    tools: ['Higgs', 'FC'],
+    badge: 'Latest',
+    description: 'A short-form AI commercial for DOMO LEMN Matcha, developed with a stylized, product-focused visual treatment.',
   },
   {
     slug: 'campbell-river',
@@ -219,9 +235,13 @@ function createCard(project, index) {
   card.type = 'button';
   card.dataset.tools = project.tools.join(' ');
   card.dataset.project = project.slug;
-  card.setAttribute('aria-label', `Open ${project.title}, ${project.year}`);
+  card.setAttribute(
+    'aria-label',
+    `${project.badge ? `${project.badge}. ` : ''}Open ${project.title}, ${project.year}`,
+  );
 
   if (project.aspect === 'portrait') card.classList.add('is-portrait');
+  if (project.badge) card.classList.add('is-latest');
 
   const image = document.createElement('img');
   image.src = project.thumb;
@@ -253,6 +273,22 @@ function createCard(project, index) {
 
   info.append(title, year);
   card.append(image, number, info);
+
+  if (project.badge) {
+    const frame = document.createElement('span');
+    frame.className = 'latest-border-base';
+    frame.setAttribute('aria-hidden', 'true');
+
+    const trace = document.createElement('span');
+    trace.className = 'latest-border-trace';
+    trace.setAttribute('aria-hidden', 'true');
+
+    const badge = document.createElement('span');
+    badge.className = 'card-badge';
+    badge.textContent = project.badge;
+    card.append(frame, trace, badge);
+  }
+
   card.addEventListener('click', () => openProject(project));
   return card;
 }
